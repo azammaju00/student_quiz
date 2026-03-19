@@ -8,7 +8,7 @@ app.use(cors());
 app.use(express.json());
 
 // 前端静态文件
-app.use(express.static("../frontend"));
+
 
 // Google Sheets 配置
 const SPREADSHEET_ID_QUESTIONS = "1mX0gf_p_P1ol-KTnQx9boSxj5Zwos2NYQj1Y84EbWEc";
