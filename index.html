@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+  <title>线上小测验</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="index.css">
+</head>
+
+<body>
+  <header>
+    <h1>线上小测验</h1>
+    <p>请选择年级与科目</p>
+  </header>
+
+  <main>
+    <!-- 学生资料 -->
+    <div class="input-group">
+      <input id="studentName" type="text" placeholder="学生姓名">
+      <input id="schoolName" type="text" placeholder="学校名称">
+    </div>
+
+    <!-- 年级 -->
+    <section>
+      <h2>年级</h2>
+      <div class="btn-row year-buttons" id="yearButtons">
+        <button data-year="一年级">一年级</button>
+        <button data-year="二年级">二年级</button>
+        <button data-year="三年级">三年级</button>
+        <button data-year="四年级">四年级</button>
+        <button data-year="五年级">五年级</button>
+        <button data-year="六年级">六年级</button>
+      </div>
+    </section>
+
+    <!-- 科目 -->
+    <section>
+      <h2>科目</h2>
+      <div class="btn-row subject-buttons" id="subjectButtons">
+        <button data-subject="BM">国文</button>
+        <button data-subject="BI">英文</button>
+        <button data-subject="BC">华文</button>
+        <button data-subject="MATH">数学</button>
+        <button data-subject="SN">科学</button>
+      </div>
+    </section>
+
+    <button id="startBtn" class="start-btn">开始作答</button>
+  </main>
+
+  <script src="index.js"></script>
+</body>
+</html>
