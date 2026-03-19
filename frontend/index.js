@@ -1,4 +1,4 @@
-let selectedYear = "";
+let selectedYear = ""
 let selectedSubject = "";
 
 /* ===== 年级按钮 ===== */
