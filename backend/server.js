@@ -19,10 +19,11 @@ const RANGE_QUESTIONS = "题库!A:I";
 const RANGE_RECORDS = "作答记录!A:I";
 
 async function getSheetsClient() {
-  const auth = new google.auth.GoogleAuth({
-    keyFile: "credentials.json",
-    scopes: ["https://www.googleapis.com/auth/spreadsheets"]
-  });
+    const auth = new google.auth.GoogleAuth({
+  credentials: JSON.parse(process.env.GOOGLE_APPLICATION_CREDENTIALS_JSON),
+  scopes: ["https://www.googleapis.com/auth/spreadsheets"]
+});
+    
 
   const client = await auth.getClient();
 
