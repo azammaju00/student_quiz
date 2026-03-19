@@ -32,7 +32,7 @@ document.getElementById("startBtn").addEventListener("click", () => {
   const name = document.getElementById("studentName").value.trim();
   const school = document.getElementById("schoolName").value.trim();
 
-  if (!name || !school || !selectedYear || !selectedSubject) {
+  if (!name || !school || !|| !selectedSubject) {
     alert("请填写学生资料并选择年级和科目");
     return;
   }
