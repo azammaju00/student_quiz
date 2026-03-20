@@ -1,47 +1,51 @@
-let selectedYear = "";
-let selectedSubject = "";
+document.addEventListener("DOMContentLoaded", () => {
 
-/* ===== 年级按钮 ===== */
-document.querySelectorAll(".year-buttons button").forEach(btn => {
-  btn.addEventListener("click", () => {
-    document
-      .querySelectorAll(".year-buttons button")
-      .forEach(b => b.classList.remove("active"));
+  let selectedYear = "";
+  let selectedSubject = "";
 
-    btn.classList.add("active");
-    selectedYear = btn.dataset.year;
+  /* ===== 年级按钮 ===== */
+  document.querySelectorAll(".year-buttons button").forEach(btn => {
+    btn.addEventListener("click", () => {
+      document
+        .querySelectorAll(".year-buttons button")
+        .forEach(b => b.classList.remove("active"));
+
+      btn.classList.add("active");
+      selectedYear = btn.dataset.year;
+    });
   });
+
+  /* ===== 科目按钮 ===== */
+  document.querySelectorAll(".subject-buttons button").forEach(btn => {
+    btn.addEventListener("click", () => {
+      document
+        .querySelectorAll(".subject-buttons button")
+        .forEach(b => b.classList.remove("active"));
+
+      btn.classList.add("active");
+      selectedSubject = btn.dataset.subject;
+    });
+  });
+
+  /* ===== 开始按钮 ===== */
+  const startBtn = document.getElementById("startBtn");
+
+  if (startBtn) {
+    startBtn.addEventListener("click", () => {
+      const name = document.getElementById("studentName")?.value.trim() || "";
+      const school = document.getElementById("schoolName")?.value.trim() || "";
+
+      if (!name || !school || !selectedYear || !selectedSubject) {
+        alert("请填写学生资料并选择年级和科目");
+        return;
+      }
+
+      location.href =
+        `./game.html?name=${encodeURIComponent(name)}` +
+        `&school=${encodeURIComponent(school)}` +
+        `&year=${encodeURIComponent(selectedYear)}` +
+        `&subject=${encodeURIComponent(selectedSubject)}`;
+    });
+  }
+
 });
-
-/* ===== 科目按钮 ===== */
-document.querySelectorAll(".subject-buttons button").forEach(btn => {
-  btn.addEventListener("click", () => {
-    document
-      .querySelectorAll(".subject-buttons button")
-      .forEach(b => b.classList.remove("active"));
-
-    btn.classList.add("active");
-    selectedSubject = btn.dataset.subject;
-  });
-});
-
-/* ===== 开始按钮 ===== */
-const startBtn = document.getElementById("startBtn");
-
-if (startBtn) {
-  startBtn.addEventListener("click", () => {
-    const name = document.getElementById("studentName")?.value.trim() || "";
-    const school = document.getElementById("schoolName")?.value.trim() || "";
-
-    if (!name || !school || !selectedYear || !selectedSubject) {
-      alert("请填写学生资料并选择年级和科目");
-      return;
-    }
-
-    location.href =
-      `game.html?name=${encodeURIComponent(name)}` +
-      `&school=${encodeURIComponent(school)}` +
-      `&year=${encodeURIComponent(selectedYear)}` +
-      `&subject=${encodeURIComponent(selectedSubject)}`;
-  });
-}
