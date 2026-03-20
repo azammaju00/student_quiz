@@ -1,6 +1,6 @@
 // ===== CONFIG =====
-const QUESTIONS_URL = "http://localhost:3000/api/questions";
-const SAVE_API = "http://localhost:3000/api/submit";
+const QUESTIONS_URL = "https://student-quiz-4wu4.onrender.com/api/questions";
+const SAVE_API = "https://student-quiz-4wu4.onrender.com/api/submit";
 
 // ===== GLOBAL =====
 let questions = [];
