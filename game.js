@@ -18,19 +18,19 @@ document.addEventListener("DOMContentLoaded", () => {
   let musicEnabled = true;
   let musicStarted = false;
 
-  const clickSound = new Audio("./audio/click.mp3");
+  const clickSound = new Audio("./audio/optionSound.wav");
   clickSound.volume = 0.35;
 
-  const nextSound = new Audio("./audio/next.mp3");
+  const nextSound = new Audio("./audio/nextQuestionSound.wav");
   nextSound.volume = 0.35;
 
-  const correctSound = new Audio("./audio/correct.mp3");
+  const correctSound = new Audio("./audio/correctSound.mp3");
   correctSound.volume = 0.4;
 
-  const wrongSound = new Audio("./audio/wrong.mp3");
+  const wrongSound = new Audio("./audio/wrongSound.mp3");
   wrongSound.volume = 0.4;
 
-  const bgm = new Audio("./audio/bgm.mp3");
+  const bgm = new Audio("./audio/backgroundMusic.mp3");
   bgm.volume = 0.12;
   bgm.loop = true;
 
