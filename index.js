@@ -4,12 +4,10 @@ let selectedSubject = "";
 /* ===== 年级按钮 ===== */
 document.querySelectorAll(".year-buttons button").forEach(btn => {
   btn.addEventListener("click", () => {
-    // 清除同组 active
     document
       .querySelectorAll(".year-buttons button")
       .forEach(b => b.classList.remove("active"));
 
-    // 设为选中
     btn.classList.add("active");
     selectedYear = btn.dataset.year;
   });
@@ -28,19 +26,22 @@ document.querySelectorAll(".subject-buttons button").forEach(btn => {
 });
 
 /* ===== 开始按钮 ===== */
-document.getElementById("startBtn").addEventListener("click", () => {
-  const name = document.getElementById("studentName").value.trim();
-  const school = document.getElementById("schoolName").value.trim();
+const startBtn = document.getElementById("startBtn");
 
- if (!name || !school || !selectedYear || !selectedSubject) {
-    alert("请填写学生资料并选择年级和科目");
-    return;
-  }
+if (startBtn) {
+  startBtn.addEventListener("click", () => {
+    const name = document.getElementById("studentName")?.value.trim() || "";
+    const school = document.getElementById("schoolName")?.value.trim() || "";
 
-  // 跳转到 game.html
-  location.href =
-    `game.html?name=${encodeURIComponent(name)}` +
-    `&school=${encodeURIComponent(school)}` +
-    `&year=${encodeURIComponent(selectedYear)}` +
-    `&subject=${encodeURIComponent(selectedSubject)}`;
-});
+    if (!name || !school || !selectedYear || !selectedSubject) {
+      alert("请填写学生资料并选择年级和科目");
+      return;
+    }
+
+    location.href =
+      `game.html?name=${encodeURIComponent(name)}` +
+      `&school=${encodeURIComponent(school)}` +
+      `&year=${encodeURIComponent(selectedYear)}` +
+      `&subject=${encodeURIComponent(selectedSubject)}`;
+  });
+}
