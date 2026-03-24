@@ -14,6 +14,9 @@ document.addEventListener("DOMContentLoaded", () => {
   let startTime = Date.now();
   let isLocked = false;
 
+  // 整份作答记录
+  let answerHistory = [];
+
   // ===== AUDIO =====
   let musicEnabled = true;
   let musicStarted = false;
@@ -36,10 +39,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // ===== GET PARAM =====
   const params = new URLSearchParams(window.location.search);
-  const year = params.get("year");
-  const subject = params.get("subject");
-  const group = params.get("group");
+  const name = params.get("name") || "";
+  const school = params.get("school") || "";
+  const year = params.get("year") || "";
+  const subject = params.get("subject") || "";
+  const group = params.get("group") || "";
 
+  console.log("name:", name);
+  console.log("school:", school);
   console.log("year:", year);
   console.log("subject:", subject);
   console.log("group:", group);
@@ -148,7 +155,6 @@ document.addEventListener("DOMContentLoaded", () => {
       const cachedQuestions = getQuestionsFromCache();
 
       if (cachedQuestions && Array.isArray(cachedQuestions) && cachedQuestions.length > 0) {
-        console.log("使用缓存题库:", cachedQuestions);
         questions = cachedQuestions;
         clearTimeout(loadingTimer);
         startTime = Date.now();
@@ -158,8 +164,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const res = await fetch(QUESTIONS_URL);
       const raw = await res.json();
-
-      console.log("原始题库:", raw);
 
       questions = raw;
       saveQuestionsToCache(raw);
@@ -311,11 +315,56 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  // ===== SAVE SUMMARY =====
+  async function saveQuizSummary() {
+    const totalQuestions = filteredQuestions.length;
+    const score = totalQuestions > 0
+      ? Math.round((correctCount / totalQuestions) * 100)
+      : 0;
+
+    const rawAnswerText = answerHistory
+      .map(item => `${item.no}:${item.answerText}`)
+      .join(" | ");
+
+    const payload = {
+      submit_time: new Date().toLocaleString("zh-CN", { hour12: false }),
+      student_name: name,
+      year: year,
+      subject: subject,
+      group_id: group || "",
+      total_questions: totalQuestions,
+      correct_count: correctCount,
+      score: score,
+      raw_answer: rawAnswerText
+    };
+
+    console.log("提交 summary:", payload);
+
+    try {
+      await fetch(SAVE_API, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(payload)
+      });
+    } catch (err) {
+      console.error("保存 summary 失败:", err);
+    }
+  }
+
   // ===== FINISH QUIZ =====
-  function finishQuiz() {
+  async function finishQuiz() {
     const endTime = Date.now();
     const duration = endTime - startTime;
     const formattedTime = formatDuration(duration);
+
+    const totalQuestions = filteredQuestions.length;
+    const score = totalQuestions > 0
+      ? Math.round((correctCount / totalQuestions) * 100)
+      : 0;
+
+    await saveQuizSummary();
 
     bgm.pause();
 
@@ -330,7 +379,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (questionEl) {
       questionEl.innerHTML =
-        `🎉 已完成所有题目<br><br>答对：${correctCount} / ${filteredQuestions.length} 题<br>完成时间：${formattedTime}`;
+        `🎉 已完成所有题目<br><br>答对：${correctCount} / ${totalQuestions} 题<br>成绩：${score} 分<br>完成时间：${formattedTime}`;
     }
 
     if (optionsEl) optionsEl.style.display = "none";
@@ -359,42 +408,16 @@ document.addEventListener("DOMContentLoaded", () => {
     const correctLetter = getCorrectLetter(q);
     const isCorrect = userAnswer === correctAnswer;
 
-    console.log("用户选择字母:", selectedAnswer);
-    console.log("用户选项内容:", userAnswer);
-    console.log("正确答案:", correctAnswer);
-    console.log("正确选项字母:", correctLetter);
-
     if (isCorrect) {
       correctCount++;
     }
 
-    const record = {
-      question_id: q.id,
-      year: q.year,
-      subject: q.subject,
-      question: q.question,
-      optionA: q.optionA,
-      optionB: q.optionB,
-      optionC: q.optionC,
-      optionD: q.optionD,
-      correct_answer: correctAnswer,
-      raw_answer: userAnswer,
-      selected_letter: selectedAnswer,
-      is_correct: isCorrect,
-      timestamp: new Date().toISOString()
-    };
-
-    try {
-      await fetch(SAVE_API, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(record)
-      });
-    } catch (err) {
-      console.error("保存失败:", err);
-    }
+    answerHistory.push({
+      no: currentIndex + 1,
+      selectedLetter: selectedAnswer,
+      answerText: userAnswer,
+      isCorrect: isCorrect
+    });
 
     showAnswerResult(isCorrect, selectedAnswer, correctLetter);
 
