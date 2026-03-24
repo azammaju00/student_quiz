@@ -1,5 +1,5 @@
 // ===== CONFIG =====
-const QUESTIONS_URL = "https://student-quiz-4wu4.onrender.com/api/questions"
+const QUESTIONS_URL = "https://student-quiz-4wu4.onrender.com/api/questions";
 const SAVE_API = "https://student-quiz-4wu4.onrender.com/api/submit";
 const QUESTIONS_CACHE_KEY = "quizQuestionsCache_v1";
 
