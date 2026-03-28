@@ -3,8 +3,9 @@ const QUESTIONS_URL = "https://student-quiz-4wu4.onrender.com/api/questions";
 const SAVE_API = "https://student-quiz-4wu4.onrender.com/api/submit";
 const QUESTIONS_CACHE_KEY = "quizQuestionsCache_v1";
 
-// ===== 等 DOM 载入后再执行 =====
+// ===== DOM READY =====
 document.addEventListener("DOMContentLoaded", () => {
+
   // ===== GLOBAL =====
   let questions = [];
   let filteredQuestions = [];
@@ -13,8 +14,6 @@ document.addEventListener("DOMContentLoaded", () => {
   let correctCount = 0;
   let startTime = Date.now();
   let isLocked = false;
-
-  // 整份作答记录
   let answerHistory = [];
 
   // ===== AUDIO =====
@@ -37,7 +36,7 @@ document.addEventListener("DOMContentLoaded", () => {
   bgm.volume = 0.12;
   bgm.loop = true;
 
-  // ===== GET PARAM =====
+  // ===== PARAM =====
   const params = new URLSearchParams(window.location.search);
   const name = params.get("name") || "";
   const school = params.get("school") || "";
@@ -45,163 +44,89 @@ document.addEventListener("DOMContentLoaded", () => {
   const subject = params.get("subject") || "";
   const group = params.get("group") || "";
 
-  console.log("name:", name);
-  console.log("school:", school);
-  console.log("year:", year);
-  console.log("subject:", subject);
-  console.log("group:", group);
-
-  // ===== AUDIO FUNCTIONS =====
-  function playClickSound() {
-    if (!musicEnabled) return;
-    clickSound.currentTime = 0;
-    clickSound.play().catch(() => {});
+  // ===== NORMALIZE（解决空格问题）=====
+  function normalizeText(value) {
+    return String(value ?? "")
+      .trim()
+      .replace(/\s+/g, " ");
   }
 
-  function playNextSound() {
+  // ===== AUDIO =====
+  function play(sound) {
     if (!musicEnabled) return;
-    nextSound.currentTime = 0;
-    nextSound.play().catch(() => {});
-  }
-
-  function playCorrectSound() {
-    if (!musicEnabled) return;
-    correctSound.currentTime = 0;
-    correctSound.play().catch(() => {});
-  }
-
-  function playWrongSound() {
-    if (!musicEnabled) return;
-    wrongSound.currentTime = 0;
-    wrongSound.play().catch(() => {});
+    sound.currentTime = 0;
+    sound.play().catch(()=>{});
   }
 
   function startBgm() {
     if (!musicEnabled || musicStarted) return;
-
-    bgm.play()
-      .then(() => {
-        musicStarted = true;
-      })
-      .catch(() => {});
-  }
-
-  function updateMusicButton() {
-    const btn = document.getElementById("musicToggle");
-    if (!btn) return;
-
-    if (musicEnabled) {
-      btn.innerText = "🔊 音乐开";
-      btn.classList.remove("off");
-    } else {
-      btn.innerText = "🔇 音乐关";
-      btn.classList.add("off");
-    }
+    bgm.play().then(()=> musicStarted = true).catch(()=>{});
   }
 
   function toggleMusic() {
     musicEnabled = !musicEnabled;
+    const btn = document.getElementById("musicToggle");
 
     if (musicEnabled) {
-      updateMusicButton();
-      bgm.play()
-        .then(() => {
-          musicStarted = true;
-        })
-        .catch(() => {});
+      btn.innerText = "🔊 音乐开";
+      bgm.play();
     } else {
+      btn.innerText = "🔇 音乐关";
       bgm.pause();
-      updateMusicButton();
     }
   }
 
-  // ===== LOADING TEXT =====
-  function setLoadingText(text) {
-    const questionEl = document.getElementById("question");
-    if (questionEl) {
-      questionEl.innerText = text;
-    }
+  // ===== CACHE =====
+  function saveCache(data) {
+    sessionStorage.setItem(QUESTIONS_CACHE_KEY, JSON.stringify(data));
   }
 
-  // ===== CACHE HELPERS =====
-  function saveQuestionsToCache(data) {
-    try {
-      sessionStorage.setItem(QUESTIONS_CACHE_KEY, JSON.stringify(data));
-    } catch (err) {
-      console.log("缓存题库失败:", err);
-    }
+  function getCache() {
+    const c = sessionStorage.getItem(QUESTIONS_CACHE_KEY);
+    return c ? JSON.parse(c) : null;
   }
 
-  function getQuestionsFromCache() {
-    try {
-      const cached = sessionStorage.getItem(QUESTIONS_CACHE_KEY);
-      if (!cached) return null;
-      return JSON.parse(cached);
-    } catch (err) {
-      console.log("读取缓存失败:", err);
-      return null;
-    }
-  }
-
-  // ===== LOAD QUESTIONS =====
+  // ===== LOAD =====
   async function loadQuestions() {
-    setLoadingText("题目加载中，请稍候...");
+    const cached = getCache();
 
-    const loadingTimer = setTimeout(() => {
-      setLoadingText("服务器启动中，请稍候...");
-    }, 3000);
+    if (cached && cached.length > 0) {
+      questions = cached;
+      startTime = Date.now();
+      filterQuestions();
+      return;
+    }
 
     try {
-      const cachedQuestions = getQuestionsFromCache();
-
-      if (cachedQuestions && Array.isArray(cachedQuestions) && cachedQuestions.length > 0) {
-        questions = cachedQuestions;
-        clearTimeout(loadingTimer);
-        startTime = Date.now();
-        filterQuestions();
-        return;
-      }
-
       const res = await fetch(QUESTIONS_URL);
       const raw = await res.json();
 
       questions = raw;
-      saveQuestionsToCache(raw);
-
-      clearTimeout(loadingTimer);
+      saveCache(raw);
       startTime = Date.now();
 
       filterQuestions();
     } catch (err) {
-      clearTimeout(loadingTimer);
-      console.error("读取题库失败", err);
-      setLoadingText("读取题目失败，请刷新重试");
+      console.error("读取失败", err);
+      document.getElementById("question").innerText = "加载失败";
     }
   }
 
   // ===== FILTER =====
   function filterQuestions() {
-    filteredQuestions = questions.filter(q => {
-      return q.year === year && q.subject === subject;
-    });
-
-    console.log("过滤后的题目:", filteredQuestions);
+    filteredQuestions = questions.filter(q =>
+      q.year === year && q.subject === subject
+    );
 
     if (filteredQuestions.length === 0) {
-      setLoadingText("⚠️ 没有符合条件的题目");
-
-      const optionsEl = document.getElementById("options");
-      const nextBtn = document.getElementById("nextBtn");
-
-      if (optionsEl) optionsEl.style.display = "none";
-      if (nextBtn) nextBtn.style.display = "none";
+      document.getElementById("question").innerText = "⚠️ 没有题目";
       return;
     }
 
     showQuestion();
   }
 
-  // ===== RESET OPTION STATE =====
+  // ===== RESET =====
   function resetOptionState() {
     selectedAnswer = null;
     isLocked = false;
@@ -209,96 +134,67 @@ document.addEventListener("DOMContentLoaded", () => {
     document.querySelectorAll(".option").forEach(btn => {
       btn.classList.remove("selected", "correct", "wrong");
       btn.disabled = false;
-      btn.blur();
     });
-
-    if (document.activeElement) {
-      document.activeElement.blur();
-    }
   }
 
-  // ===== SHOW QUESTION =====
+  // ===== SHOW =====
   function showQuestion() {
     const q = filteredQuestions[currentIndex];
     if (!q) return;
 
     resetOptionState();
 
-    const progressEl = document.getElementById("progress");
-    const questionEl = document.getElementById("question");
+    document.getElementById("progress").innerText =
+      `${currentIndex + 1} / ${filteredQuestions.length}`;
 
-    if (progressEl) {
-      progressEl.innerText = `${currentIndex + 1} / ${filteredQuestions.length}`;
-    }
+    document.getElementById("question").innerText = q.question;
 
-    if (questionEl) {
-      questionEl.innerText = q.question;
-    }
-
-    const a = document.getElementById("A");
-    const b = document.getElementById("B");
-    const c = document.getElementById("C");
-    const d = document.getElementById("D");
-
-    if (a) a.innerText = q.optionA ?? "";
-    if (b) b.innerText = q.optionB ?? "";
-    if (c) c.innerText = q.optionC ?? "";
-    if (d) d.innerText = q.optionD ?? "";
+    document.getElementById("A").innerText = q.optionA ?? "";
+    document.getElementById("B").innerText = q.optionB ?? "";
+    document.getElementById("C").innerText = q.optionC ?? "";
+    document.getElementById("D").innerText = q.optionD ?? "";
   }
 
-  // ===== SELECT ANSWER =====
+  // ===== SELECT =====
   window.selectAnswer = function(letter) {
     if (isLocked) return;
 
     selectedAnswer = letter;
-
     startBgm();
-    playClickSound();
+    play(clickSound);
 
-    document.querySelectorAll(".option").forEach(btn => {
-      btn.classList.remove("selected");
-    });
+    document.querySelectorAll(".option").forEach(btn =>
+      btn.classList.remove("selected")
+    );
 
-    const btn = document.getElementById("opt" + letter);
-    if (btn) {
-      btn.classList.add("selected");
-    }
+    document.getElementById("opt" + letter)?.classList.add("selected");
   };
 
-  // ===== FORMAT TIME =====
-  function formatDuration(ms) {
-    const totalSeconds = Math.floor(ms / 1000);
-    const minutes = Math.floor(totalSeconds / 60);
-    const seconds = totalSeconds % 60;
-
-    return `${minutes}分${seconds.toString().padStart(2, "0")}秒`;
-  }
-
-  // ===== GET SELECTED OPTION TEXT =====
-  function getSelectedOptionText(q, letter) {
-    if (letter === "A") return String(q.optionA ?? "").trim();
-    if (letter === "B") return String(q.optionB ?? "").trim();
-    if (letter === "C") return String(q.optionC ?? "").trim();
-    if (letter === "D") return String(q.optionD ?? "").trim();
+  // ===== GET TEXT =====
+  function getOptionText(q, letter) {
+    if (letter === "A") return q.optionA;
+    if (letter === "B") return q.optionB;
+    if (letter === "C") return q.optionC;
+    if (letter === "D") return q.optionD;
     return "";
   }
 
-  // ===== GET CORRECT LETTER =====
+  // ===== 找正确答案是哪一格 =====
   function getCorrectLetter(q) {
-    const answer = String(q.answer ?? "").trim();
+    const ans = normalizeText(q.answer);
 
-    if (String(q.optionA ?? "").trim() === answer) return "A";
-    if (String(q.optionB ?? "").trim() === answer) return "B";
-    if (String(q.optionC ?? "").trim() === answer) return "C";
-    if (String(q.optionD ?? "").trim() === answer) return "D";
+    if (normalizeText(q.optionA) === ans) return "A";
+    if (normalizeText(q.optionB) === ans) return "B";
+    if (normalizeText(q.optionC) === ans) return "C";
+    if (normalizeText(q.optionD) === ans) return "D";
 
     return "";
   }
 
-  // ===== SHOW RESULT COLORS =====
-  function showAnswerResult(isCorrect, selectedLetter, correctLetter) {
-    const selectedBtn = document.getElementById("opt" + selectedLetter);
-    const correctBtn = document.getElementById("opt" + correctLetter);
+  // ===== 显示对错 =====
+  function showResult(isCorrect, selected, correct) {
+    const s = document.getElementById("opt" + selected);
+    const c = document.getElementById("opt" + correct);
 
     document.querySelectorAll(".option").forEach(btn => {
       btn.disabled = true;
@@ -306,92 +202,70 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     if (isCorrect) {
-      if (selectedBtn) selectedBtn.classList.add("correct");
-      playCorrectSound();
+      s?.classList.add("correct");
+      play(correctSound);
     } else {
-      if (selectedBtn) selectedBtn.classList.add("wrong");
-      if (correctBtn) correctBtn.classList.add("correct");
-      playWrongSound();
+      s?.classList.add("wrong");
+      c?.classList.add("correct");
+      play(wrongSound);
     }
   }
 
-  // ===== SAVE SUMMARY =====
-  async function saveQuizSummary() {
-    const totalQuestions = filteredQuestions.length;
-    const score = totalQuestions > 0
-      ? Math.round((correctCount / totalQuestions) * 100)
-      : 0;
+  // ===== 时间 =====
+  function formatTime(ms) {
+    const s = Math.floor(ms / 1000);
+    const m = Math.floor(s / 60);
+    return `${m}分${(s % 60).toString().padStart(2,"0")}秒`;
+  }
 
-    const rawAnswerText = answerHistory
-      .map(item => `${item.no}:${item.answerText}`)
+  // ===== SAVE =====
+  async function saveSummary() {
+    const total = filteredQuestions.length;
+
+    const raw = answerHistory
+      .map(a => `${a.no}:${a.answerText || ""}`)
       .join(" | ");
 
     const payload = {
-      submit_time: new Date().toLocaleString("zh-CN", { hour12: false }),
+      submit_time: new Date().toLocaleString(),
       student_name: name,
-      year: year,
-      subject: subject,
+      year,
+      subject,
       group_id: group || "",
-      total_questions: totalQuestions,
+      total_questions: total,
       correct_count: correctCount,
-      score: score,
-      raw_answer: rawAnswerText
+      score: "",   // ❌ 不要分数
+      raw_answer: raw
     };
 
-    console.log("提交 summary:", payload);
-
-    try {
-      await fetch(SAVE_API, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(payload)
-      });
-    } catch (err) {
-      console.error("保存 summary 失败:", err);
-    }
+    await fetch(SAVE_API, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
   }
 
-  // ===== FINISH QUIZ =====
+  // ===== 完成 =====
   async function finishQuiz() {
-    const endTime = Date.now();
-    const duration = endTime - startTime;
-    const formattedTime = formatDuration(duration);
+    await saveSummary();
 
-    const totalQuestions = filteredQuestions.length;
-    const score = totalQuestions > 0
-      ? Math.round((correctCount / totalQuestions) * 100)
-      : 0;
+    const time = formatTime(Date.now() - startTime);
 
-    await saveQuizSummary();
+    document.getElementById("question").innerHTML =
+      `🎉 已完成所有题目<br><br>答对：${correctCount} / ${filteredQuestions.length} 题<br>完成时间：${time}`;
+
+    document.getElementById("options").style.display = "none";
+    document.getElementById("nextBtn").style.display = "none";
 
     bgm.pause();
-
-    const progressEl = document.getElementById("progress");
-    const questionEl = document.getElementById("question");
-    const optionsEl = document.getElementById("options");
-    const nextBtn = document.getElementById("nextBtn");
-
-    if (progressEl) {
-      progressEl.innerText = "已完成";
-    }
-
-    if (questionEl) {
-      questionEl.innerHTML =
-        `🎉 已完成所有题目<br><br>答对：${correctCount} / ${totalQuestions} 题<br>成绩：${score} 分<br>完成时间：${formattedTime}`;
-    }
-
-    if (optionsEl) optionsEl.style.display = "none";
-    if (nextBtn) nextBtn.style.display = "none";
   }
 
-  // ===== NEXT QUESTION =====
-  window.nextQuestion = async function() {
+  // ===== 下一题 =====
+  window.nextQuestion = function() {
     if (isLocked) return;
 
     startBgm();
-    playNextSound();
+    play(nextSound);
 
     if (!selectedAnswer) {
       alert("请选择答案");
@@ -399,27 +273,23 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     const q = filteredQuestions[currentIndex];
-    if (!q) return;
 
-    isLocked = true;
-
-    const userAnswer = getSelectedOptionText(q, selectedAnswer);
-    const correctAnswer = String(q.answer ?? "").trim();
+    const user = normalizeText(getOptionText(q, selectedAnswer));
+    const correct = normalizeText(q.answer);
     const correctLetter = getCorrectLetter(q);
-    const isCorrect = userAnswer === correctAnswer;
 
-    if (isCorrect) {
-      correctCount++;
-    }
+    const isCorrect = user === correct;
+
+    if (isCorrect) correctCount++;
 
     answerHistory.push({
       no: currentIndex + 1,
-      selectedLetter: selectedAnswer,
-      answerText: userAnswer,
-      isCorrect: isCorrect
+      answerText: user
     });
 
-    showAnswerResult(isCorrect, selectedAnswer, correctLetter);
+    showResult(isCorrect, selectedAnswer, correctLetter);
+
+    isLocked = true;
 
     setTimeout(() => {
       currentIndex++;
@@ -435,9 +305,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // ===== INIT =====
   loadQuestions();
-  updateMusicButton();
 
-  document.getElementById("musicToggle")?.addEventListener("click", () => {
-    toggleMusic();
-  });
+  document.getElementById("musicToggle")
+    ?.addEventListener("click", toggleMusic);
+
 });
