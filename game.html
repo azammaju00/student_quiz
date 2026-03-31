@@ -5,7 +5,6 @@
   <title>作答中</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="./game.css" />
-<script src="game.js"></script>
 </head>
 
 <body>
@@ -16,6 +15,8 @@
     </div>
 
     <h3 id="question">题目加载中...</h3>
+
+    <img id="questionImage" class="question-img" style="display: none;" alt="题目图片">
 
     <div id="options">
       <button class="option" id="optA" onclick="selectAnswer('A')">
@@ -38,6 +39,6 @@
     <button id="nextBtn" onclick="nextQuestion()">下一题</button>
   </div>
 
-  
+  <script src="./game.js"></script>
 </body>
 </html>
