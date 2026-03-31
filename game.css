@@ -57,9 +57,22 @@ body {
   padding: 16px;
   border-radius: 14px;
   font-size: 17px;
-  margin-bottom: 20px;
+  margin-bottom: 12px;
   border: 1px solid #e5e7eb;
   line-height: 1.6;
+}
+
+/* ===== 题目图片 ===== */
+.question-img {
+  width: 100%;
+  max-height: 240px;
+  object-fit: contain;
+  margin-bottom: 16px;
+  border-radius: 12px;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  padding: 8px;
+  box-sizing: border-box;
 }
 
 /* ===== 选项区 ===== */
