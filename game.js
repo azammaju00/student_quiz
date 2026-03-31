@@ -3,7 +3,6 @@ const QUESTIONS_URL = "https://student-quiz-4wu4.onrender.com/api/questions";
 const SAVE_API = "https://student-quiz-4wu4.onrender.com/api/submit";
 const QUESTIONS_CACHE_KEY = "quizQuestionsCache_v1";
 
-// ===== DOM READY =====
 document.addEventListener("DOMContentLoaded", () => {
 
   // ===== GLOBAL =====
@@ -44,7 +43,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const subject = params.get("subject") || "";
   const group = params.get("group") || "";
 
-  // ===== NORMALIZE（解决空格问题）=====
+  // ===== NORMALIZE =====
   function normalizeText(value) {
     return String(value ?? "")
       .trim()
@@ -55,12 +54,12 @@ document.addEventListener("DOMContentLoaded", () => {
   function play(sound) {
     if (!musicEnabled) return;
     sound.currentTime = 0;
-    sound.play().catch(()=>{});
+    sound.play().catch(() => {});
   }
 
   function startBgm() {
     if (!musicEnabled || musicStarted) return;
-    bgm.play().then(()=> musicStarted = true).catch(()=>{});
+    bgm.play().then(() => musicStarted = true).catch(() => {});
   }
 
   function toggleMusic() {
@@ -69,7 +68,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (musicEnabled) {
       btn.innerText = "🔊 音乐开";
-      bgm.play();
+      bgm.play().catch(() => {});
     } else {
       btn.innerText = "🔇 音乐关";
       bgm.pause();
@@ -153,6 +152,17 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("B").innerText = q.optionB ?? "";
     document.getElementById("C").innerText = q.optionC ?? "";
     document.getElementById("D").innerText = q.optionD ?? "";
+
+    const img = document.getElementById("questionImage");
+    if (img) {
+      if (q.image) {
+        img.src = q.image;
+        img.style.display = "block";
+      } else {
+        img.src = "";
+        img.style.display = "none";
+      }
+    }
   }
 
   // ===== SELECT =====
@@ -179,7 +189,7 @@ document.addEventListener("DOMContentLoaded", () => {
     return "";
   }
 
-  // ===== 找正确答案是哪一格 =====
+  // ===== CORRECT LETTER =====
   function getCorrectLetter(q) {
     const ans = normalizeText(q.answer);
 
@@ -191,7 +201,7 @@ document.addEventListener("DOMContentLoaded", () => {
     return "";
   }
 
-  // ===== 显示对错 =====
+  // ===== SHOW RESULT =====
   function showResult(isCorrect, selected, correct) {
     const s = document.getElementById("opt" + selected);
     const c = document.getElementById("opt" + correct);
@@ -211,11 +221,11 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // ===== 时间 =====
+  // ===== TIME =====
   function formatTime(ms) {
     const s = Math.floor(ms / 1000);
     const m = Math.floor(s / 60);
-    return `${m}分${(s % 60).toString().padStart(2,"0")}秒`;
+    return `${m}分${(s % 60).toString().padStart(2, "0")}秒`;
   }
 
   // ===== SAVE =====
@@ -234,7 +244,7 @@ document.addEventListener("DOMContentLoaded", () => {
       group_id: group || "",
       total_questions: total,
       correct_count: correctCount,
-      score: "",   // ❌ 不要分数
+      score: "",
       raw_answer: raw
     };
 
@@ -245,7 +255,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // ===== 完成 =====
+  // ===== FINISH =====
   async function finishQuiz() {
     await saveSummary();
 
@@ -257,10 +267,15 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("options").style.display = "none";
     document.getElementById("nextBtn").style.display = "none";
 
+    const img = document.getElementById("questionImage");
+    if (img) {
+      img.style.display = "none";
+    }
+
     bgm.pause();
   }
 
-  // ===== 下一题 =====
+  // ===== NEXT =====
   window.nextQuestion = function() {
     if (isLocked) return;
 
