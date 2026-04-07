@@ -3,6 +3,7 @@ const QUESTIONS_URL = "https://student-quiz-4wu4.onrender.com/api/questions";
 const SAVE_API = "https://student-quiz-4wu4.onrender.com/api/submit";
 const QUESTIONS_CACHE_KEY = "quizQuestionsCache_v1";
 
+// ===== DOM READY =====
 document.addEventListener("DOMContentLoaded", () => {
 
   // ===== GLOBAL =====
@@ -43,6 +44,12 @@ document.addEventListener("DOMContentLoaded", () => {
   const subject = params.get("subject") || "";
   const group = params.get("group") || "";
 
+  console.log("name:", name);
+  console.log("school:", school);
+  console.log("year:", year);
+  console.log("subject:", subject);
+  console.log("group:", group);
+
   // ===== NORMALIZE =====
   function normalizeText(value) {
     return String(value ?? "")
@@ -59,7 +66,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function startBgm() {
     if (!musicEnabled || musicStarted) return;
-    bgm.play().then(() => musicStarted = true).catch(() => {});
+    bgm.play().then(() => {
+      musicStarted = true;
+    }).catch(() => {});
   }
 
   function toggleMusic() {
@@ -68,21 +77,31 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (musicEnabled) {
       btn.innerText = "🔊 音乐开";
+      btn.classList.remove("off");
       bgm.play().catch(() => {});
     } else {
       btn.innerText = "🔇 音乐关";
+      btn.classList.add("off");
       bgm.pause();
     }
   }
 
   // ===== CACHE =====
   function saveCache(data) {
-    sessionStorage.setItem(QUESTIONS_CACHE_KEY, JSON.stringify(data));
+    try {
+      sessionStorage.setItem(QUESTIONS_CACHE_KEY, JSON.stringify(data));
+    } catch (err) {
+      console.log("缓存失败:", err);
+    }
   }
 
   function getCache() {
-    const c = sessionStorage.getItem(QUESTIONS_CACHE_KEY);
-    return c ? JSON.parse(c) : null;
+    try {
+      const c = sessionStorage.getItem(QUESTIONS_CACHE_KEY);
+      return c ? JSON.parse(c) : null;
+    } catch (err) {
+      return null;
+    }
   }
 
   // ===== LOAD =====
@@ -113,12 +132,21 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // ===== FILTER =====
   function filterQuestions() {
-    filteredQuestions = questions.filter(q =>
-      q.year === year && q.subject === subject
-    );
+    filteredQuestions = questions.filter(q => {
+
+      if (year === "基础作文班") {
+        return q.year === "基础作文班" && q.group === group;
+      }
+
+      return q.year === year && q.subject === subject;
+    });
+
+    console.log("过滤后的题目:", filteredQuestions);
 
     if (filteredQuestions.length === 0) {
       document.getElementById("question").innerText = "⚠️ 没有题目";
+      document.getElementById("options").style.display = "none";
+      document.getElementById("nextBtn").style.display = "none";
       return;
     }
 
@@ -173,9 +201,9 @@ document.addEventListener("DOMContentLoaded", () => {
     startBgm();
     play(clickSound);
 
-    document.querySelectorAll(".option").forEach(btn =>
-      btn.classList.remove("selected")
-    );
+    document.querySelectorAll(".option").forEach(btn => {
+      btn.classList.remove("selected");
+    });
 
     document.getElementById("opt" + letter)?.classList.add("selected");
   };
@@ -323,5 +351,4 @@ document.addEventListener("DOMContentLoaded", () => {
 
   document.getElementById("musicToggle")
     ?.addEventListener("click", toggleMusic);
-
 });
