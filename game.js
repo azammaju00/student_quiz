@@ -150,7 +150,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     showQuestion();
-  }
+ ) }
 
   // ===== RESET =====
   function resetOptionState() {
