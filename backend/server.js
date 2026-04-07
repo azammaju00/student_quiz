@@ -10,7 +10,7 @@ app.use(express.json());
 const SPREADSHEET_ID_QUESTIONS = "1mX0gf_p_P1ol-KTnQx9boSxj5Zwos2NYQj1Y84EbWEc";
 const SPREADSHEET_ID_RECORDS = "1mX0gf_p_P1ol-KTnQx9boSxj5Zwos2NYQj1Y84EbWEc";
 
-const RANGE_QUESTIONS = "题库!A:J";
+const RANGE_QUESTIONS = "题库!A:K";
 const RANGE_RECORDS = "作答记录!A:I";
 
 async function getSheetsClient() {
@@ -27,6 +27,7 @@ async function getSheetsClient() {
   });
 }
 
+// ===== 取得题库 =====
 app.get("/api/questions", async (req, res) => {
   try {
     const sheets = await getSheetsClient();
@@ -52,7 +53,8 @@ app.get("/api/questions", async (req, res) => {
       optionC: r[6] || "",
       optionD: r[7] || "",
       answer: r[8] || "",
-      image: r[9] || ""
+      image: r[9] || "",
+      group: r[10] || ""
     }));
 
     res.json(questions);
@@ -62,6 +64,7 @@ app.get("/api/questions", async (req, res) => {
   }
 });
 
+// ===== 存 summary =====
 app.post("/api/submit", async (req, res) => {
   try {
     const {
