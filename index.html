@@ -5,50 +5,64 @@
   <title>线上小测验</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="index.css">
-<script src="index.js"></script>
 </head>
 
 <body>
   <header>
     <h1>线上小测验</h1>
-    <p>请选择年级与科目</p>
+    <p>请选择练习类型</p>
   </header>
 
   <main>
+
     <!-- 学生资料 -->
     <div class="input-group">
       <input id="studentName" type="text" placeholder="学生姓名">
       <input id="schoolName" type="text" placeholder="学校名称">
     </div>
 
-    <!-- 年级 -->
+    <!-- 模式选择 -->
     <section>
+      <h2>练习类型</h2>
+      <div class="btn-row mode-buttons">
+        <button data-mode="school">学校科目</button>
+        <button data-mode="composition">基础作文班</button>
+      </div>
+    </section>
+
+    <!-- 学校模式 -->
+    <section id="schoolSection" style="display:none;">
       <h2>年级</h2>
-      <div class="btn-row year-buttons" id="yearButtons">
-        <button data-year="一年级">一年级</button>
-        <button data-year="二年级">二年级</button>
-        <button data-year="三年级">三年级</button>
+      <div class="btn-row year-buttons">
         <button data-year="四年级">四年级</button>
         <button data-year="五年级">五年级</button>
         <button data-year="六年级">六年级</button>
       </div>
+
+      <h2>科目</h2>
+      <div class="btn-row subject-buttons">
+        <button data-subject="BM">BM</button>
+        <button data-subject="BI">BI</button>
+        <button data-subject="BC">BC</button>
+        <button data-subject="MATH">MATH</button>
+        <button data-subject="SN">SN</button>
+      </div>
     </section>
 
-    <!-- 科目 -->
-    <section>
-      <h2>科目</h2>
-      <div class="btn-row subject-buttons" id="subjectButtons">
-        <button data-subject="BM">国文</button>
-        <button data-subject="BI">英文</button>
-        <button data-subject="BC">华文</button>
-        <button data-subject="MATH">数学</button>
-        <button data-subject="SN">科学</button>
+    <!-- 作文班 -->
+    <section id="compositionSection" style="display:none;">
+      <h2>请选择练习</h2>
+      <div class="btn-row group-buttons">
+        <button data-group="练习一">练习一</button>
+        <button data-group="练习二">练习二</button>
+        <button data-group="练习三">练习三</button>
       </div>
     </section>
 
     <button id="startBtn" class="start-btn">开始作答</button>
+
   </main>
 
-  
+  <script src="index.js"></script>
 </body>
 </html>
