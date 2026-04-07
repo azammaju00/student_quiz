@@ -131,14 +131,15 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // ===== FILTER =====
-  filteredQuestions = questions.filter(q => {
+  function filterQuestions() {
+    filteredQuestions = questions.filter(q => {
 
-  if (subject === "作文班") {
-    return q.subject === "作文班" && q.group === group;
-  }
+      if (subject === "作文班") {
+        return q.subject === "作文班" && q.group === group;
+      }
 
-  return q.year === year && q.subject === subject;
-});
+      return q.year === year && q.subject === subject;
+    });
 
     console.log("过滤后的题目:", filteredQuestions);
 
@@ -150,7 +151,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     showQuestion();
- )}
+  }
 
   // ===== RESET =====
   function resetOptionState() {
