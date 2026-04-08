@@ -132,16 +132,42 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // ===== FILTER =====
   function filterQuestions() {
-    filteredQuestions = questions.filter(q => {
+    const currentYear = normalizeText(year);
+    const currentSubject = normalizeText(subject);
+    const currentGroup = normalizeText(group);
 
-      if (subject === "作文班") {
-        return q.subject === "作文班" && q.group === group;
-      }
-
-      return q.year === year && q.subject === subject;
+    console.log("==== 当前筛选条件 ====");
+    console.log({
+      year: currentYear,
+      subject: currentSubject,
+      group: currentGroup
     });
 
-    console.log("过滤后的题目:", filteredQuestions);
+    console.log("==== 全部题目数量 ====", questions.length);
+
+    console.log(
+      "==== 所有作文班题目 ====",
+      questions.filter(q => normalizeText(q.subject) === "作文班")
+    );
+
+    console.log(
+      "==== 所有同年级题目 ====",
+      questions.filter(q => normalizeText(q.year) === currentYear)
+    );
+
+    filteredQuestions = questions.filter(q => {
+      const qYear = normalizeText(q.year);
+      const qSubject = normalizeText(q.subject);
+      const qGroup = normalizeText(q.group);
+
+      if (currentSubject === "作文班") {
+        return qSubject === "作文班" && qGroup === currentGroup;
+      }
+
+      return qYear === currentYear && qSubject === currentSubject;
+    });
+
+    console.log("==== 过滤后的题目 ====", filteredQuestions);
 
     if (filteredQuestions.length === 0) {
       document.getElementById("question").innerText = "⚠️ 没有题目";
