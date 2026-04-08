@@ -6,7 +6,6 @@ let selectedGroup = "";
 /* ===== 模式选择 ===== */
 document.querySelectorAll(".mode-buttons button").forEach(btn => {
   btn.addEventListener("click", () => {
-
     document.querySelectorAll(".mode-buttons button")
       .forEach(b => b.classList.remove("active"));
 
@@ -43,7 +42,7 @@ document.querySelectorAll(".subject-buttons button").forEach(btn => {
   });
 });
 
-/* ===== 作文班 ===== */
+/* ===== 作文班练习 ===== */
 document.querySelectorAll(".group-buttons button").forEach(btn => {
   btn.addEventListener("click", () => {
     document.querySelectorAll(".group-buttons button")
@@ -56,16 +55,17 @@ document.querySelectorAll(".group-buttons button").forEach(btn => {
 
 /* ===== 开始 ===== */
 document.getElementById("startBtn").addEventListener("click", () => {
-
   const name = document.getElementById("studentName").value.trim();
   const school = document.getElementById("schoolName").value.trim();
 
   if (!name || !school || !mode) {
-    alert("请填写资料并选择模式");
+    alert("请填写资料并选择练习类型");
     return;
   }
 
-  let url = `game.html?name=${encodeURIComponent(name)}&school=${encodeURIComponent(school)}`;
+  let url =
+    `game.html?name=${encodeURIComponent(name)}` +
+    `&school=${encodeURIComponent(school)}`;
 
   if (mode === "school") {
     if (!selectedYear || !selectedSubject) {
@@ -73,7 +73,9 @@ document.getElementById("startBtn").addEventListener("click", () => {
       return;
     }
 
-    url += `&year=${selectedYear}&subject=${selectedSubject}`;
+    url +=
+      `&year=${encodeURIComponent(selectedYear)}` +
+      `&subject=${encodeURIComponent(selectedSubject)}`;
   }
 
   if (mode === "composition") {
@@ -82,7 +84,10 @@ document.getElementById("startBtn").addEventListener("click", () => {
       return;
     }
 
-    url += `&year=基础作文班&group=${selectedGroup}`;
+    url +=
+      `&year=${encodeURIComponent("基础作文班")}` +
+      `&subject=${encodeURIComponent("作文班")}` +
+      `&group=${encodeURIComponent(selectedGroup)}`;
   }
 
   location.href = url;
