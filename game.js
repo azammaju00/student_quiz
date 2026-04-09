@@ -1,7 +1,7 @@
 // ===== CONFIG =====
 const QUESTIONS_URL = "https://student-quiz-4wu4.onrender.com/api/questions";
 const SAVE_API = "https://student-quiz-4wu4.onrender.com/api/submit";
-const QUESTIONS_CACHE_KEY = "quizQuestionsCache_v1";
+const QUESTIONS_CACHE_KEY = "quizQuestionsCache_v2";
 
 // ===== DOM READY =====
 document.addEventListener("DOMContentLoaded", () => {
@@ -86,7 +86,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // ===== CACHE =====
+  // ===== CACHE（只保存，不优先读取）=====
   function saveCache(data) {
     try {
       sessionStorage.setItem(QUESTIONS_CACHE_KEY, JSON.stringify(data));
@@ -95,28 +95,10 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  function getCache() {
-    try {
-      const c = sessionStorage.getItem(QUESTIONS_CACHE_KEY);
-      return c ? JSON.parse(c) : null;
-    } catch (err) {
-      return null;
-    }
-  }
-
   // ===== LOAD =====
   async function loadQuestions() {
-    const cached = getCache();
-
-    if (cached && cached.length > 0) {
-      questions = cached;
-      startTime = Date.now();
-      filterQuestions();
-      return;
-    }
-
     try {
-      const res = await fetch(QUESTIONS_URL);
+      const res = await fetch(QUESTIONS_URL, { cache: "no-store" });
       const raw = await res.json();
 
       questions = raw;
