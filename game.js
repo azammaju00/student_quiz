@@ -1,12 +1,10 @@
 // ===== CONFIG =====
 const QUESTIONS_URL = "https://student-quiz-4wu4.onrender.com/api/questions";
 const SAVE_API = "https://student-quiz-4wu4.onrender.com/api/submit";
-const QUESTIONS_CACHE_KEY = "quizQuestionsCache_v2";
 
 // ===== DOM READY =====
 document.addEventListener("DOMContentLoaded", () => {
 
-  // ===== GLOBAL =====
   let questions = [];
   let filteredQuestions = [];
   let currentIndex = 0;
@@ -16,26 +14,6 @@ document.addEventListener("DOMContentLoaded", () => {
   let isLocked = false;
   let answerHistory = [];
 
-  // ===== AUDIO =====
-  let musicEnabled = true;
-  let musicStarted = false;
-
-  const clickSound = new Audio("./audio/optionSound.wav");
-  clickSound.volume = 0.35;
-
-  const nextSound = new Audio("./audio/nextQuestionSound.wav");
-  nextSound.volume = 0.35;
-
-  const correctSound = new Audio("./audio/correctSound.mp3");
-  correctSound.volume = 0.4;
-
-  const wrongSound = new Audio("./audio/wrongSound.mp3");
-  wrongSound.volume = 0.4;
-
-  const bgm = new Audio("./audio/backgroundMusic.mp3");
-  bgm.volume = 0.12;
-  bgm.loop = true;
-
   // ===== PARAM =====
   const params = new URLSearchParams(window.location.search);
   const name = params.get("name") || "";
@@ -44,55 +22,25 @@ document.addEventListener("DOMContentLoaded", () => {
   const subject = params.get("subject") || "";
   const group = params.get("group") || "";
 
-  console.log("name:", name);
-  console.log("school:", school);
   console.log("year:", year);
   console.log("subject:", subject);
   console.log("group:", group);
 
   // ===== NORMALIZE =====
-  function normalizeText(value) {
-    return String(value ?? "")
-      .trim()
-      .replace(/\s+/g, " ");
+  function normalizeText(v) {
+    return String(v ?? "").trim().replace(/\s+/g, " ");
   }
 
-  // ===== AUDIO =====
-  function play(sound) {
-    if (!musicEnabled) return;
-    sound.currentTime = 0;
-    sound.play().catch(() => {});
-  }
+  function normalizeSubject(v) {
+    const t = normalizeText(v).toUpperCase();
 
-  function startBgm() {
-    if (!musicEnabled || musicStarted) return;
-    bgm.play().then(() => {
-      musicStarted = true;
-    }).catch(() => {});
-  }
+    if (t === "MATEMATIK" || t === "数学") return "MATH";
+    if (t === "SAINS" || t === "科学") return "SN";
+    if (t === "BAHASA MELAYU" || t === "国文") return "BM";
+    if (t === "BAHASA INGGERIS" || t === "英文") return "BI";
+    if (t === "BAHASA CINA" || t === "华文") return "BC";
 
-  function toggleMusic() {
-    musicEnabled = !musicEnabled;
-    const btn = document.getElementById("musicToggle");
-
-    if (musicEnabled) {
-      btn.innerText = "🔊 音乐开";
-      btn.classList.remove("off");
-      bgm.play().catch(() => {});
-    } else {
-      btn.innerText = "🔇 音乐关";
-      btn.classList.add("off");
-      bgm.pause();
-    }
-  }
-
-  // ===== CACHE（只保存，不优先读取）=====
-  function saveCache(data) {
-    try {
-      sessionStorage.setItem(QUESTIONS_CACHE_KEY, JSON.stringify(data));
-    } catch (err) {
-      console.log("缓存失败:", err);
-    }
+    return t;
   }
 
   // ===== LOAD =====
@@ -102,7 +50,6 @@ document.addEventListener("DOMContentLoaded", () => {
       const raw = await res.json();
 
       questions = raw;
-      saveCache(raw);
       startTime = Date.now();
 
       filterQuestions();
@@ -118,35 +65,28 @@ document.addEventListener("DOMContentLoaded", () => {
     const currentSubject = normalizeText(subject);
     const currentGroup = normalizeText(group);
 
-    console.log("==== 当前筛选条件 ====");
-    console.log({
+    console.log("==== 当前筛选条件 ====", {
       year: currentYear,
       subject: currentSubject,
       group: currentGroup
     });
 
-    console.log("==== 全部题目数量 ====", questions.length);
-
-    console.log(
-      "==== 所有作文班题目 ====",
-      questions.filter(q => normalizeText(q.subject) === "作文班")
-    );
-
-    console.log(
-      "==== 所有同年级题目 ====",
-      questions.filter(q => normalizeText(q.year) === currentYear)
-    );
-
     filteredQuestions = questions.filter(q => {
       const qYear = normalizeText(q.year);
-      const qSubject = normalizeText(q.subject);
+      const qSubjectRaw = normalizeText(q.subject);
+      const qSubject = normalizeSubject(q.subject);
       const qGroup = normalizeText(q.group);
 
+      // ✨ 作文班
       if (currentSubject === "作文班") {
-        return qSubject === "作文班" && qGroup === currentGroup;
+        return qSubjectRaw === "作文班" && qGroup === currentGroup;
       }
 
-      return qYear === currentYear && qSubject === currentSubject;
+      // ✨ 学校题
+      return (
+        qYear === currentYear &&
+        qSubject === normalizeSubject(currentSubject)
+      );
     });
 
     console.log("==== 过滤后的题目 ====", filteredQuestions);
@@ -188,17 +128,6 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("B").innerText = q.optionB ?? "";
     document.getElementById("C").innerText = q.optionC ?? "";
     document.getElementById("D").innerText = q.optionD ?? "";
-
-    const img = document.getElementById("questionImage");
-    if (img) {
-      if (q.image) {
-        img.src = q.image;
-        img.style.display = "block";
-      } else {
-        img.src = "";
-        img.style.display = "none";
-      }
-    }
   }
 
   // ===== SELECT =====
@@ -206,8 +135,6 @@ document.addEventListener("DOMContentLoaded", () => {
     if (isLocked) return;
 
     selectedAnswer = letter;
-    startBgm();
-    play(clickSound);
 
     document.querySelectorAll(".option").forEach(btn => {
       btn.classList.remove("selected");
@@ -225,7 +152,7 @@ document.addEventListener("DOMContentLoaded", () => {
     return "";
   }
 
-  // ===== CORRECT LETTER =====
+  // ===== 找正确答案字母 =====
   function getCorrectLetter(q) {
     const ans = normalizeText(q.answer);
 
@@ -237,7 +164,7 @@ document.addEventListener("DOMContentLoaded", () => {
     return "";
   }
 
-  // ===== SHOW RESULT =====
+  // ===== 显示结果 =====
   function showResult(isCorrect, selected, correct) {
     const s = document.getElementById("opt" + selected);
     const c = document.getElementById("opt" + correct);
@@ -249,11 +176,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (isCorrect) {
       s?.classList.add("correct");
-      play(correctSound);
     } else {
       s?.classList.add("wrong");
       c?.classList.add("correct");
-      play(wrongSound);
     }
   }
 
@@ -302,21 +227,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
     document.getElementById("options").style.display = "none";
     document.getElementById("nextBtn").style.display = "none";
-
-    const img = document.getElementById("questionImage");
-    if (img) {
-      img.style.display = "none";
-    }
-
-    bgm.pause();
   }
 
   // ===== NEXT =====
   window.nextQuestion = function() {
     if (isLocked) return;
-
-    startBgm();
-    play(nextSound);
 
     if (!selectedAnswer) {
       alert("请选择答案");
@@ -351,12 +266,10 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       showQuestion();
-    }, 1200);
+    }, 1000);
   };
 
   // ===== INIT =====
   loadQuestions();
 
-  document.getElementById("musicToggle")
-    ?.addEventListener("click", toggleMusic);
 });
