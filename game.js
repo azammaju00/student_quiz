@@ -14,6 +14,26 @@ document.addEventListener("DOMContentLoaded", () => {
   let isLocked = false;
   let answerHistory = [];
 
+  // ===== 🎵 音乐 =====
+  let musicEnabled = true;
+  let musicStarted = false;
+
+  const clickSound = new Audio("./audio/optionSound.wav");
+  clickSound.volume = 0.35;
+
+  const nextSound = new Audio("./audio/nextQuestionSound.wav");
+  nextSound.volume = 0.35;
+
+  const correctSound = new Audio("./audio/correctSound.mp3");
+  correctSound.volume = 0.4;
+
+  const wrongSound = new Audio("./audio/wrongSound.mp3");
+  wrongSound.volume = 0.4;
+
+  const bgm = new Audio("./audio/backgroundMusic.mp3");
+  bgm.volume = 0.12;
+  bgm.loop = true;
+
   // ===== PARAM =====
   const params = new URLSearchParams(window.location.search);
   const name = params.get("name") || "";
@@ -43,6 +63,35 @@ document.addEventListener("DOMContentLoaded", () => {
     return t;
   }
 
+  // ===== 🎵 播放 =====
+  function play(sound) {
+    if (!musicEnabled) return;
+    sound.currentTime = 0;
+    sound.play().catch(() => {});
+  }
+
+  function startBgm() {
+    if (!musicEnabled || musicStarted) return;
+    bgm.play().then(() => {
+      musicStarted = true;
+    }).catch(() => {});
+  }
+
+  function toggleMusic() {
+    musicEnabled = !musicEnabled;
+    const btn = document.getElementById("musicToggle");
+
+    if (musicEnabled) {
+      btn.innerText = "🔊 音乐开";
+      btn.classList.remove("off");
+      bgm.play().catch(() => {});
+    } else {
+      btn.innerText = "🔇 音乐关";
+      btn.classList.add("off");
+      bgm.pause();
+    }
+  }
+
   // ===== LOAD =====
   async function loadQuestions() {
     try {
@@ -65,31 +114,23 @@ document.addEventListener("DOMContentLoaded", () => {
     const currentSubject = normalizeText(subject);
     const currentGroup = normalizeText(group);
 
-    console.log("==== 当前筛选条件 ====", {
-      year: currentYear,
-      subject: currentSubject,
-      group: currentGroup
-    });
-
     filteredQuestions = questions.filter(q => {
       const qYear = normalizeText(q.year);
       const qSubjectRaw = normalizeText(q.subject);
       const qSubject = normalizeSubject(q.subject);
       const qGroup = normalizeText(q.group);
 
-      // ✨ 作文班
+      // 作文班
       if (currentSubject === "作文班") {
         return qSubjectRaw === "作文班" && qGroup === currentGroup;
       }
 
-      // ✨ 学校题
+      // 学校题
       return (
         qYear === currentYear &&
         qSubject === normalizeSubject(currentSubject)
       );
     });
-
-    console.log("==== 过滤后的题目 ====", filteredQuestions);
 
     if (filteredQuestions.length === 0) {
       document.getElementById("question").innerText = "⚠️ 没有题目";
@@ -135,6 +176,8 @@ document.addEventListener("DOMContentLoaded", () => {
     if (isLocked) return;
 
     selectedAnswer = letter;
+    startBgm();
+    play(clickSound);
 
     document.querySelectorAll(".option").forEach(btn => {
       btn.classList.remove("selected");
@@ -152,7 +195,7 @@ document.addEventListener("DOMContentLoaded", () => {
     return "";
   }
 
-  // ===== 找正确答案字母 =====
+  // ===== 找正确答案 =====
   function getCorrectLetter(q) {
     const ans = normalizeText(q.answer);
 
@@ -176,9 +219,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (isCorrect) {
       s?.classList.add("correct");
+      play(correctSound);
     } else {
       s?.classList.add("wrong");
       c?.classList.add("correct");
+      play(wrongSound);
     }
   }
 
@@ -191,8 +236,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // ===== SAVE =====
   async function saveSummary() {
-    const total = filteredQuestions.length;
-
     const raw = answerHistory
       .map(a => `${a.no}:${a.answerText || ""}`)
       .join(" | ");
@@ -203,7 +246,7 @@ document.addEventListener("DOMContentLoaded", () => {
       year,
       subject,
       group_id: group || "",
-      total_questions: total,
+      total_questions: filteredQuestions.length,
       correct_count: correctCount,
       score: "",
       raw_answer: raw
@@ -223,15 +266,20 @@ document.addEventListener("DOMContentLoaded", () => {
     const time = formatTime(Date.now() - startTime);
 
     document.getElementById("question").innerHTML =
-      `🎉 已完成所有题目<br><br>答对：${correctCount} / ${filteredQuestions.length} 题<br>完成时间：${time}`;
+      `🎉 已完成<br><br>答对：${correctCount} / ${filteredQuestions.length}<br>时间：${time}`;
 
     document.getElementById("options").style.display = "none";
     document.getElementById("nextBtn").style.display = "none";
+
+    bgm.pause();
   }
 
   // ===== NEXT =====
   window.nextQuestion = function() {
     if (isLocked) return;
+
+    startBgm();
+    play(nextSound);
 
     if (!selectedAnswer) {
       alert("请选择答案");
@@ -266,10 +314,13 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       showQuestion();
-    }, 1000);
+    }, 1200);
   };
 
   // ===== INIT =====
   loadQuestions();
+
+  document.getElementById("musicToggle")
+    ?.addEventListener("click", toggleMusic);
 
 });
