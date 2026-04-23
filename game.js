@@ -70,10 +70,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const slider = document.getElementById("volumeSlider");
 
     if (slider) slider.value = Math.round(currentVolume * 100);
-
-    if (btn) {
-      btn.textContent = currentVolume === 0 ? "🔇" : "🔊";
-    }
+    if (btn) btn.textContent = currentVolume === 0 ? "🔇" : "🔊";
   }
 
   function play(sound) {
@@ -135,12 +132,10 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function showStars(correct, total) {
-    const box = document.getElementById("resultBox");
     const container = document.getElementById("starsContainer");
-    if (!box || !container) return;
+    if (!container) return;
 
     container.innerHTML = "";
-
     const count = getStarCount(correct, total);
 
     for (let i = 0; i < count; i++) {
@@ -168,7 +163,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
       questions = raw;
       startTime = Date.now();
-
       filterQuestions();
     } catch (err) {
       console.error("读取失败", err);
@@ -226,8 +220,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
     resetOptionState();
 
-    document.getElementById("progress").innerText =
-      `${currentIndex + 1} / ${filteredQuestions.length}`;
+    const progressEl = document.getElementById("progress");
+    progressEl.innerText = `${currentIndex + 1} / ${filteredQuestions.length}`;
+
+    progressEl.classList.remove("progress-bounce");
+    void progressEl.offsetWidth;
+    progressEl.classList.add("progress-bounce");
 
     document.getElementById("question").innerText = q.question;
 
@@ -272,7 +270,7 @@ document.addEventListener("DOMContentLoaded", () => {
     return "";
   }
 
-  // ===== 找正确答案 =====
+  // ===== 正确答案字母 =====
   function getCorrectLetter(q) {
     const ans = normalizeText(q.answer);
 
