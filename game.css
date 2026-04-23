@@ -10,7 +10,7 @@ body {
 .game-container {
   max-width: 420px;
   margin: auto;
-  padding: 20px 16px;
+  padding: 20px 16px 40px;
 }
 
 /* ===== 顶部 ===== */
@@ -49,6 +49,28 @@ body {
   background: #f3f4f6;
   color: #6b7280;
   border-color: #d1d5db;
+}
+
+/* ===== 音量 ===== */
+.volume-wrap {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 10px 12px;
+}
+
+.volume-wrap label {
+  font-size: 14px;
+  color: #4b5563;
+  min-width: 36px;
+}
+
+#volumeSlider {
+  flex: 1;
 }
 
 /* ===== 题目卡片 ===== */
@@ -153,10 +175,61 @@ body {
   transform: scale(0.96);
 }
 
+/* ===== 星星评分 ===== */
+.stars-box {
+  margin-top: 24px;
+  padding: 18px 14px;
+  border-radius: 16px;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  text-align: center;
+}
+
+.stars-title {
+  font-size: 14px;
+  color: #6b7280;
+  margin-bottom: 8px;
+}
+
+.stars-row {
+  font-size: 34px;
+  letter-spacing: 6px;
+  transform: scale(0.8);
+  opacity: 0;
+}
+
+.stars-row.show {
+  animation: popStars 0.6s ease forwards;
+}
+
+@keyframes popStars {
+  0% {
+    transform: scale(0.6);
+    opacity: 0;
+  }
+  70% {
+    transform: scale(1.08);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* ===== footer ===== */
+.credit {
+  margin: 18px 0 10px;
+  text-align: center;
+  font-size: 12px;
+  color: #888;
+  opacity: 0.8;
+}
+
 /* ===== 手机优化 ===== */
 @media (max-width: 480px) {
   .game-container {
-    padding: 16px;
+    padding: 16px 16px 34px;
   }
 
   #question {
