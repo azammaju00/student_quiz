@@ -2,8 +2,8 @@
 body {
   margin: 0;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-  background: #f5f7fb;
   min-height: 100vh;
+  background: linear-gradient(135deg, #a5b4fc, #c7d2fe, #fbcfe8);
 }
 
 /* ===== 页面容器 ===== */
@@ -24,8 +24,32 @@ body {
 
 /* ===== 进度 ===== */
 #progress {
-  font-size: 14px;
-  color: #6b7280;
+  font-size: 15px;
+  color: #374151;
+  font-weight: 700;
+  background: rgba(255, 255, 255, 0.8);
+  padding: 8px 14px;
+  border-radius: 999px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.progress-bounce {
+  animation: bounceProgress 0.45s ease;
+}
+
+@keyframes bounceProgress {
+  0% {
+    transform: scale(1);
+  }
+  35% {
+    transform: scale(1.45) rotate(-4deg);
+  }
+  70% {
+    transform: scale(0.92) rotate(2deg);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 
 /* ===== 右上角音量控制 ===== */
@@ -33,24 +57,35 @@ body {
   display: flex;
   align-items: center;
   gap: 6px;
+  background: rgba(255, 255, 255, 0.85);
+  padding: 6px 8px;
+  border-radius: 999px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
 }
 
 .music-btn {
   font-size: 16px;
   padding: 6px 8px;
-  border-radius: 8px;
-  border: 1px solid #ddd;
+  border-radius: 999px;
+  border: none;
   background: white;
   cursor: pointer;
   line-height: 1;
+  box-shadow: 0 3px 0 #d1d5db;
+  transition: all 0.15s ease;
 }
 
 .music-btn:hover {
-  background: #f3f4f6;
+  transform: translateY(-1px) scale(1.05);
+}
+
+.music-btn:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 #d1d5db;
 }
 
 #volumeSlider {
-  width: 72px;
+  width: 68px;
   height: 4px;
   cursor: pointer;
 }
@@ -58,12 +93,12 @@ body {
 /* ===== 题目卡片 ===== */
 #question {
   background: white;
-  padding: 16px;
-  border-radius: 14px;
+  padding: 18px;
+  border-radius: 20px;
   font-size: 17px;
-  margin-bottom: 12px;
-  border: 1px solid #e5e7eb;
-  line-height: 1.6;
+  margin-bottom: 14px;
+  line-height: 1.65;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.1);
 }
 
 /* ===== 题目图片 ===== */
@@ -72,57 +107,60 @@ body {
   max-height: 240px;
   object-fit: contain;
   margin-bottom: 16px;
-  border-radius: 12px;
+  border-radius: 16px;
   background: #ffffff;
-  border: 1px solid #e5e7eb;
+  border: 2px solid rgba(255, 255, 255, 0.8);
   padding: 8px;
   box-sizing: border-box;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
 }
 
 /* ===== 选项区 ===== */
 #options {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
 }
 
 /* ===== 选项按钮 ===== */
 .option {
   width: 100%;
-  padding: 14px;
+  padding: 15px 16px;
   font-size: 15px;
-  border-radius: 12px;
-  border: 2px solid #e5e7eb;
-  background: #ffffff;
+  border-radius: 18px;
+  border: none;
+  background: white;
   cursor: pointer;
   text-align: left;
-  transition: all 0.2s ease;
+  box-shadow: 0 5px 0 #d8dbe3;
+  transition: all 0.18s ease;
 }
 
 .option:hover {
-  border-color: #6366f1;
-  background: #eef2ff;
+  transform: translateY(-2px) scale(1.02);
+}
+
+.option:active {
+  transform: translateY(2px);
+  box-shadow: 0 2px 0 #d8dbe3;
 }
 
 .option.selected {
-  background: #4f46e5;
+  background: #6366f1;
   color: white;
-  border-color: #4338ca;
-  font-weight: 600;
+  box-shadow: 0 5px 0 #4338ca;
 }
 
 .option.correct {
   background: #22c55e;
   color: white;
-  border-color: #16a34a;
-  font-weight: 600;
+  box-shadow: 0 5px 0 #15803d;
 }
 
 .option.wrong {
   background: #ef4444;
   color: white;
-  border-color: #dc2626;
-  font-weight: 600;
+  box-shadow: 0 5px 0 #b91c1c;
 }
 
 .option:disabled {
@@ -139,32 +177,36 @@ body {
 #nextBtn {
   width: 100%;
   margin-top: 20px;
-  padding: 14px;
+  padding: 15px;
   font-size: 16px;
-  border-radius: 14px;
+  font-weight: 700;
+  border-radius: 18px;
   border: none;
-  background: #22c55e;
+  background: #6366f1;
   color: white;
   cursor: pointer;
-  transition: all 0.2s ease;
+  box-shadow: 0 5px 0 #4338ca;
+  transition: all 0.18s ease;
 }
 
 #nextBtn:hover {
-  background: #16a34a;
+  transform: translateY(-2px) scale(1.01);
 }
 
 #nextBtn:active {
-  transform: scale(0.96);
+  transform: translateY(2px);
+  box-shadow: 0 2px 0 #4338ca;
 }
 
 /* ===== 结果卡片 ===== */
 .result-box {
   margin-top: 24px;
-  padding: 20px;
-  border-radius: 18px;
+  padding: 22px 18px;
+  border-radius: 22px;
   background: white;
-  border: 1px solid #e5e7eb;
+  border: none;
   text-align: center;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.12);
 }
 
 /* ===== 星星容器 ===== */
@@ -174,19 +216,19 @@ body {
   align-items: flex-end;
   gap: 14px;
   margin-bottom: 16px;
-  min-height: 64px;
+  min-height: 70px;
 }
 
 /* ===== 单颗星 ===== */
 .star {
-  font-size: 42px;
+  font-size: 44px;
   color: #ffd84d;
   opacity: 0;
   transform: scale(0.2) rotate(-18deg);
   text-shadow:
     0 2px 0 #d9a800,
     0 4px 0 #c79200,
-    0 7px 12px rgba(0, 0, 0, 0.25);
+    0 8px 14px rgba(0, 0, 0, 0.24);
 }
 
 .star.offset-up {
@@ -194,7 +236,7 @@ body {
 }
 
 .star.offset-down {
-  margin-top: 10px;
+  margin-top: 8px;
 }
 
 .star.show {
@@ -206,8 +248,8 @@ body {
     transform: scale(0.2) rotate(-18deg);
     opacity: 0;
   }
-  58% {
-    transform: scale(1.35) rotate(6deg);
+  55% {
+    transform: scale(1.38) rotate(6deg);
     opacity: 1;
   }
   78% {
@@ -223,7 +265,9 @@ body {
 /* ===== 结果文字 ===== */
 .final-text {
   font-size: 16px;
-  line-height: 1.7;
+  line-height: 1.75;
+  color: #374151;
+  font-weight: 600;
 }
 
 /* ===== 操作按钮 ===== */
@@ -236,35 +280,36 @@ body {
 
 .action-buttons button {
   flex: 1;
-  padding: 12px;
-  border-radius: 12px;
+  padding: 13px;
+  border-radius: 16px;
   border: none;
   cursor: pointer;
   font-size: 14px;
-  transition: all 0.2s ease;
+  font-weight: 700;
+  transition: all 0.18s ease;
 }
 
 #retryBtn {
   background: #6366f1;
   color: white;
+  box-shadow: 0 4px 0 #4338ca;
 }
 
 #homeBtn {
   background: #10b981;
   color: white;
+  box-shadow: 0 4px 0 #047857;
 }
 
-#retryBtn:hover {
-  background: #4f46e5;
-}
-
+#retryBtn:hover,
 #homeBtn:hover {
-  background: #059669;
+  transform: translateY(-2px) scale(1.02);
 }
 
 #retryBtn:active,
 #homeBtn:active {
-  transform: scale(0.95);
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.2);
 }
 
 /* ===== footer ===== */
@@ -272,8 +317,8 @@ body {
   margin: 18px 0 10px;
   text-align: center;
   font-size: 12px;
-  color: #888;
-  opacity: 0.8;
+  color: #6b7280;
+  opacity: 0.9;
 }
 
 /* ===== 手机优化 ===== */
@@ -291,6 +336,6 @@ body {
   }
 
   #volumeSlider {
-    width: 64px;
+    width: 60px;
   }
 }
