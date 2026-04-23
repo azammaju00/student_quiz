@@ -14,6 +14,11 @@
       <button id="musicToggle" class="music-toggle" type="button">🔊 音乐开</button>
     </div>
 
+    <div class="volume-wrap">
+      <label for="volumeSlider">音量</label>
+      <input id="volumeSlider" type="range" min="0" max="100" value="35">
+    </div>
+
     <h3 id="question">题目加载中...</h3>
 
     <img id="questionImage" class="question-img" style="display:none;" alt="题目图片">
@@ -37,7 +42,16 @@
     </div>
 
     <button id="nextBtn" onclick="nextQuestion()">下一题</button>
+
+    <div id="resultStars" class="stars-box" style="display:none;">
+      <div class="stars-title">评分</div>
+      <div class="stars-row" id="starsRow">☆☆☆</div>
+    </div>
   </div>
+
+  <footer class="credit">
+    © Azam Maju Tuition Center
+  </footer>
 
   <script src="./game.js"></script>
 </body>
