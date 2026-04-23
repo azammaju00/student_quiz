@@ -28,49 +28,31 @@ body {
   color: #6b7280;
 }
 
-/* ===== 音乐按钮 ===== */
-.music-toggle {
-  padding: 10px 14px;
-  font-size: 14px;
-  border-radius: 12px;
-  border: 2px solid #e5e7eb;
-  background: #ffffff;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  white-space: nowrap;
-}
-
-.music-toggle:hover {
-  border-color: #6366f1;
-  background: #eef2ff;
-}
-
-.music-toggle.off {
-  background: #f3f4f6;
-  color: #6b7280;
-  border-color: #d1d5db;
-}
-
-/* ===== 音量 ===== */
-.volume-wrap {
+/* ===== 右上角音量控制 ===== */
+.audio-control {
   display: flex;
   align-items: center;
-  gap: 12px;
-  margin-bottom: 14px;
-  background: #fff;
-  border: 1px solid #e5e7eb;
-  border-radius: 12px;
-  padding: 10px 12px;
+  gap: 6px;
 }
 
-.volume-wrap label {
-  font-size: 14px;
-  color: #4b5563;
-  min-width: 36px;
+.music-btn {
+  font-size: 16px;
+  padding: 6px 8px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  background: white;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.music-btn:hover {
+  background: #f3f4f6;
 }
 
 #volumeSlider {
-  flex: 1;
+  width: 72px;
+  height: 4px;
+  cursor: pointer;
 }
 
 /* ===== 题目卡片 ===== */
@@ -175,46 +157,114 @@ body {
   transform: scale(0.96);
 }
 
-/* ===== 星星评分 ===== */
-.stars-box {
+/* ===== 结果卡片 ===== */
+.result-box {
   margin-top: 24px;
-  padding: 18px 14px;
-  border-radius: 16px;
-  background: #ffffff;
+  padding: 20px;
+  border-radius: 18px;
+  background: white;
   border: 1px solid #e5e7eb;
   text-align: center;
 }
 
-.stars-title {
-  font-size: 14px;
-  color: #6b7280;
-  margin-bottom: 8px;
+/* ===== 星星容器 ===== */
+.stars-container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  gap: 14px;
+  margin-bottom: 16px;
+  min-height: 64px;
 }
 
-.stars-row {
-  font-size: 34px;
-  letter-spacing: 6px;
-  transform: scale(0.8);
+/* ===== 单颗星 ===== */
+.star {
+  font-size: 42px;
+  color: #ffd84d;
   opacity: 0;
+  transform: scale(0.2) rotate(-18deg);
+  text-shadow:
+    0 2px 0 #d9a800,
+    0 4px 0 #c79200,
+    0 7px 12px rgba(0, 0, 0, 0.25);
 }
 
-.stars-row.show {
-  animation: popStars 0.6s ease forwards;
+.star.offset-up {
+  margin-bottom: 10px;
 }
 
-@keyframes popStars {
+.star.offset-down {
+  margin-top: 10px;
+}
+
+.star.show {
+  animation: stampStar 0.42s ease forwards;
+}
+
+@keyframes stampStar {
   0% {
-    transform: scale(0.6);
+    transform: scale(0.2) rotate(-18deg);
     opacity: 0;
   }
-  70% {
-    transform: scale(1.08);
+  58% {
+    transform: scale(1.35) rotate(6deg);
+    opacity: 1;
+  }
+  78% {
+    transform: scale(0.92) rotate(-2deg);
     opacity: 1;
   }
   100% {
-    transform: scale(1);
+    transform: scale(1) rotate(0deg);
     opacity: 1;
   }
+}
+
+/* ===== 结果文字 ===== */
+.final-text {
+  font-size: 16px;
+  line-height: 1.7;
+}
+
+/* ===== 操作按钮 ===== */
+.action-buttons {
+  margin-top: 18px;
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.action-buttons button {
+  flex: 1;
+  padding: 12px;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+#retryBtn {
+  background: #6366f1;
+  color: white;
+}
+
+#homeBtn {
+  background: #10b981;
+  color: white;
+}
+
+#retryBtn:hover {
+  background: #4f46e5;
+}
+
+#homeBtn:hover {
+  background: #059669;
+}
+
+#retryBtn:active,
+#homeBtn:active {
+  transform: scale(0.95);
 }
 
 /* ===== footer ===== */
@@ -238,5 +288,9 @@ body {
 
   .top-bar {
     align-items: flex-start;
+  }
+
+  #volumeSlider {
+    width: 64px;
   }
 }
