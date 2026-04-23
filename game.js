@@ -4,7 +4,6 @@ const SAVE_API = "https://student-quiz-4wu4.onrender.com/api/submit";
 
 // ===== DOM READY =====
 document.addEventListener("DOMContentLoaded", () => {
-
   let questions = [];
   let filteredQuestions = [];
   let currentIndex = 0;
@@ -18,6 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let musicEnabled = true;
   let musicStarted = false;
   let currentVolume = 0.35;
+  let lastVolume = 0.35;
 
   const clickSound = new Audio("./audio/optionSound.wav");
   const nextSound = new Audio("./audio/nextQuestionSound.wav");
@@ -58,67 +58,106 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // ===== 音量 =====
   function applyVolume() {
-    clickSound.volume = Math.min(currentVolume, 1);
-    nextSound.volume = Math.min(currentVolume, 1);
-    correctSound.volume = Math.min(currentVolume, 1);
-    wrongSound.volume = Math.min(currentVolume, 1);
-    bgm.volume = Math.min(currentVolume * 0.35, 1);
+    clickSound.volume = currentVolume;
+    nextSound.volume = currentVolume;
+    correctSound.volume = currentVolume;
+    wrongSound.volume = currentVolume;
+    bgm.volume = currentVolume * 0.35;
   }
 
-  applyVolume();
+  function updateAudioUI() {
+    const btn = document.getElementById("musicToggle");
+    const slider = document.getElementById("volumeSlider");
 
-  // ===== 音乐控制 =====
+    if (slider) slider.value = Math.round(currentVolume * 100);
+
+    if (btn) {
+      btn.textContent = currentVolume === 0 ? "🔇" : "🔊";
+    }
+  }
+
   function play(sound) {
-    if (!musicEnabled) return;
+    if (!musicEnabled || currentVolume === 0) return;
     sound.currentTime = 0;
     sound.play().catch(() => {});
   }
 
   function startBgm() {
-    if (!musicEnabled || musicStarted) return;
+    if (!musicEnabled || musicStarted || currentVolume === 0) return;
     bgm.play().then(() => {
       musicStarted = true;
     }).catch(() => {});
   }
 
   function toggleMusic() {
-    musicEnabled = !musicEnabled;
-    const btn = document.getElementById("musicToggle");
-
-    if (musicEnabled) {
-      btn.innerText = "🔊 音乐开";
-      btn.classList.remove("off");
+    if (currentVolume === 0) {
+      currentVolume = lastVolume > 0 ? lastVolume : 0.35;
+      musicEnabled = true;
+      applyVolume();
+      updateAudioUI();
       bgm.play().catch(() => {});
     } else {
-      btn.innerText = "🔇 音乐关";
-      btn.classList.add("off");
+      lastVolume = currentVolume;
+      currentVolume = 0;
+      musicEnabled = false;
+      applyVolume();
+      updateAudioUI();
       bgm.pause();
     }
   }
 
+  function handleSlider(e) {
+    const val = Number(e.target.value) / 100;
+    currentVolume = val;
+
+    if (val === 0) {
+      musicEnabled = false;
+      bgm.pause();
+    } else {
+      lastVolume = val;
+      musicEnabled = true;
+      bgm.play().catch(() => {});
+    }
+
+    applyVolume();
+    updateAudioUI();
+  }
+
+  applyVolume();
+
   // ===== 评分星星 =====
-  function getStarText(correct, total) {
-    if (total === 0) return "☆☆☆";
-
+  function getStarCount(correct, total) {
+    if (total === 0) return 0;
     const rate = correct / total;
-
-    if (rate >= 0.8) return "★★★";
-    if (rate >= 0.5) return "★★☆";
-    return "★☆☆";
+    if (rate >= 0.8) return 3;
+    if (rate >= 0.5) return 2;
+    return 1;
   }
 
   function showStars(correct, total) {
-    const box = document.getElementById("resultStars");
-    const row = document.getElementById("starsRow");
-    if (!box || !row) return;
+    const box = document.getElementById("resultBox");
+    const container = document.getElementById("starsContainer");
+    if (!box || !container) return;
 
-    row.classList.remove("show");
-    row.textContent = getStarText(correct, total);
-    box.style.display = "block";
+    container.innerHTML = "";
 
-    setTimeout(() => {
-      row.classList.add("show");
-    }, 50);
+    const count = getStarCount(correct, total);
+
+    for (let i = 0; i < count; i++) {
+      const star = document.createElement("div");
+      star.className = "star";
+
+      if (i === 0) star.classList.add("offset-down");
+      if (i === 1) star.classList.add("offset-up");
+      if (i === 2) star.classList.add("offset-down");
+
+      star.textContent = "★";
+      container.appendChild(star);
+
+      setTimeout(() => {
+        star.classList.add("show");
+      }, i * 220);
+    }
   }
 
   // ===== LOAD =====
@@ -304,16 +343,19 @@ document.addEventListener("DOMContentLoaded", () => {
     const total = filteredQuestions.length;
     const time = formatTime(Date.now() - startTime);
 
-    document.getElementById("question").innerHTML =
-      `🎉 已完成所有题目<br><br>答对：${correctCount} / ${total} 题<br>完成时间：${time}`;
-
+    document.getElementById("question").style.display = "none";
     document.getElementById("options").style.display = "none";
     document.getElementById("nextBtn").style.display = "none";
 
     const img = document.getElementById("questionImage");
     if (img) img.style.display = "none";
 
+    document.getElementById("resultBox").style.display = "block";
     showStars(correctCount, total);
+
+    document.getElementById("finalText").innerHTML =
+      `答对：${correctCount} / ${total} 题<br>完成时间：${time}`;
+
     bgm.pause();
   }
 
@@ -365,9 +407,17 @@ document.addEventListener("DOMContentLoaded", () => {
     ?.addEventListener("click", toggleMusic);
 
   document.getElementById("volumeSlider")
-    ?.addEventListener("input", (e) => {
-      currentVolume = Number(e.target.value) / 100;
-      applyVolume();
+    ?.addEventListener("input", handleSlider);
+
+  document.getElementById("retryBtn")
+    ?.addEventListener("click", () => {
+      location.reload();
     });
 
+  document.getElementById("homeBtn")
+    ?.addEventListener("click", () => {
+      window.location.href = "index.html";
+    });
+
+  updateAudioUI();
 });
