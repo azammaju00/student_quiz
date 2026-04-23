@@ -11,12 +11,11 @@
   <div class="game-container">
     <div class="top-bar">
       <div id="progress">1 / 10</div>
-      <button id="musicToggle" class="music-toggle" type="button">🔊 音乐开</button>
-    </div>
 
-    <div class="volume-wrap">
-      <label for="volumeSlider">音量</label>
-      <input id="volumeSlider" type="range" min="0" max="100" value="35">
+      <div class="audio-control">
+        <button id="musicToggle" class="music-btn" type="button">🔊</button>
+        <input id="volumeSlider" type="range" min="0" max="100" value="35">
+      </div>
     </div>
 
     <h3 id="question">题目加载中...</h3>
@@ -43,9 +42,15 @@
 
     <button id="nextBtn" onclick="nextQuestion()">下一题</button>
 
-    <div id="resultStars" class="stars-box" style="display:none;">
-      <div class="stars-title">评分</div>
-      <div class="stars-row" id="starsRow">☆☆☆</div>
+    <div id="resultBox" class="result-box" style="display:none;">
+      <div id="starsContainer" class="stars-container"></div>
+
+      <div id="finalText" class="final-text"></div>
+
+      <div class="action-buttons">
+        <button id="retryBtn" type="button">🔁 再来一次</button>
+        <button id="homeBtn" type="button">🏠 返回主页</button>
+      </div>
     </div>
   </div>
 
