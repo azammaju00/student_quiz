@@ -14,24 +14,17 @@ document.addEventListener("DOMContentLoaded", () => {
   let isLocked = false;
   let answerHistory = [];
 
-  // ===== 🎵 音乐 =====
+  // ===== 音乐 =====
   let musicEnabled = true;
   let musicStarted = false;
+  let currentVolume = 0.35;
 
   const clickSound = new Audio("./audio/optionSound.wav");
-  clickSound.volume = 0.35;
-
   const nextSound = new Audio("./audio/nextQuestionSound.wav");
-  nextSound.volume = 0.35;
-
   const correctSound = new Audio("./audio/correctSound.mp3");
-  correctSound.volume = 0.4;
-
   const wrongSound = new Audio("./audio/wrongSound.mp3");
-  wrongSound.volume = 0.4;
-
   const bgm = new Audio("./audio/backgroundMusic.mp3");
-  bgm.volume = 0.12;
+
   bgm.loop = true;
 
   // ===== PARAM =====
@@ -63,7 +56,18 @@ document.addEventListener("DOMContentLoaded", () => {
     return t;
   }
 
-  // ===== 🎵 播放 =====
+  // ===== 音量 =====
+  function applyVolume() {
+    clickSound.volume = Math.min(currentVolume, 1);
+    nextSound.volume = Math.min(currentVolume, 1);
+    correctSound.volume = Math.min(currentVolume, 1);
+    wrongSound.volume = Math.min(currentVolume, 1);
+    bgm.volume = Math.min(currentVolume * 0.35, 1);
+  }
+
+  applyVolume();
+
+  // ===== 音乐控制 =====
   function play(sound) {
     if (!musicEnabled) return;
     sound.currentTime = 0;
@@ -90,6 +94,31 @@ document.addEventListener("DOMContentLoaded", () => {
       btn.classList.add("off");
       bgm.pause();
     }
+  }
+
+  // ===== 评分星星 =====
+  function getStarText(correct, total) {
+    if (total === 0) return "☆☆☆";
+
+    const rate = correct / total;
+
+    if (rate >= 0.8) return "★★★";
+    if (rate >= 0.5) return "★★☆";
+    return "★☆☆";
+  }
+
+  function showStars(correct, total) {
+    const box = document.getElementById("resultStars");
+    const row = document.getElementById("starsRow");
+    if (!box || !row) return;
+
+    row.classList.remove("show");
+    row.textContent = getStarText(correct, total);
+    box.style.display = "block";
+
+    setTimeout(() => {
+      row.classList.add("show");
+    }, 50);
   }
 
   // ===== LOAD =====
@@ -120,12 +149,10 @@ document.addEventListener("DOMContentLoaded", () => {
       const qSubject = normalizeSubject(q.subject);
       const qGroup = normalizeText(q.group);
 
-      // 作文班
       if (currentSubject === "作文班") {
         return qSubjectRaw === "作文班" && qGroup === currentGroup;
       }
 
-      // 学校题
       return (
         qYear === currentYear &&
         qSubject === normalizeSubject(currentSubject)
@@ -169,6 +196,17 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("B").innerText = q.optionB ?? "";
     document.getElementById("C").innerText = q.optionC ?? "";
     document.getElementById("D").innerText = q.optionD ?? "";
+
+    const img = document.getElementById("questionImage");
+    if (img) {
+      if (q.image) {
+        img.src = q.image;
+        img.style.display = "block";
+      } else {
+        img.src = "";
+        img.style.display = "none";
+      }
+    }
   }
 
   // ===== SELECT =====
@@ -263,14 +301,19 @@ document.addEventListener("DOMContentLoaded", () => {
   async function finishQuiz() {
     await saveSummary();
 
+    const total = filteredQuestions.length;
     const time = formatTime(Date.now() - startTime);
 
     document.getElementById("question").innerHTML =
-      `🎉 已完成<br><br>答对：${correctCount} / ${filteredQuestions.length}<br>时间：${time}`;
+      `🎉 已完成所有题目<br><br>答对：${correctCount} / ${total} 题<br>完成时间：${time}`;
 
     document.getElementById("options").style.display = "none";
     document.getElementById("nextBtn").style.display = "none";
 
+    const img = document.getElementById("questionImage");
+    if (img) img.style.display = "none";
+
+    showStars(correctCount, total);
     bgm.pause();
   }
 
@@ -287,7 +330,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     const q = filteredQuestions[currentIndex];
-
     const user = normalizeText(getOptionText(q, selectedAnswer));
     const correct = normalizeText(q.answer);
     const correctLetter = getCorrectLetter(q);
@@ -302,7 +344,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     showResult(isCorrect, selectedAnswer, correctLetter);
-
     isLocked = true;
 
     setTimeout(() => {
@@ -322,5 +363,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
   document.getElementById("musicToggle")
     ?.addEventListener("click", toggleMusic);
+
+  document.getElementById("volumeSlider")
+    ?.addEventListener("input", (e) => {
+      currentVolume = Number(e.target.value) / 100;
+      applyVolume();
+    });
 
 });
