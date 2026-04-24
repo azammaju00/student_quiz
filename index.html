@@ -4,68 +4,70 @@
   <meta charset="UTF-8">
   <title>线上小测验</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="index.css">
+  <link rel="stylesheet" href="./index.css">
 </head>
 
 <body>
-  <header>
-    <h1>线上小测验</h1>
-    <p>请选择练习类型</p>
-  </header>
+  <div class="page-wrap">
+    <header class="hero">
+      <div class="hero-badge">Learning Quiz</div>
+      <h1>线上小测验</h1>
+      <p>请选择练习类型，开始作答吧！</p>
+    </header>
 
-  <main>
-
-    <!-- 学生资料 -->
-    <div class="input-group">
-      <input id="studentName" type="text" placeholder="学生姓名">
-      <input id="schoolName" type="text" placeholder="学校名称">
-    </div>
-
-    <!-- 模式选择 -->
-    <section>
-      <h2>练习类型</h2>
-      <div class="btn-row mode-buttons">
-        <button data-mode="school">学校科目</button>
-        <button data-mode="composition">基础作文班</button>
-      </div>
-    </section>
-
-    <!-- 学校模式 -->
-    <section id="schoolSection" style="display:none;">
-      <h2>年级</h2>
-      <div class="btn-row year-buttons">
-        <button data-year="一年级">一年级</button>
-        <button data-year="二年级">二年级</button>
-        <button data-year="三年级">三年级</button>
-        <button data-year="四年级">四年级</button>
-        <button data-year="五年级">五年级</button>
-        <button data-year="六年级">六年级</button>
+    <main class="main-card">
+      <div class="input-group">
+        <input id="studentName" type="text" placeholder="学生姓名">
+        <input id="schoolName" type="text" placeholder="学校名称">
       </div>
 
-      <h2>科目</h2>
-      <div class="btn-row subject-buttons">
-        <button data-subject="BM">BM</button>
-        <button data-subject="BI">BI</button>
-        <button data-subject="BC">BC</button>
-        <button data-subject="MATH">MATH</button>
-        <button data-subject="SN">SN</button>
-      </div>
-    </section>
+      <section>
+        <h2>练习类型</h2>
+        <div class="btn-row mode-buttons">
+          <button data-mode="school" type="button">学校科目</button>
+          <button data-mode="composition" type="button">基础作文班</button>
+        </div>
+      </section>
 
-    <!-- 作文班 -->
-    <section id="compositionSection" style="display:none;">
-      <h2>请选择练习</h2>
-      <div class="btn-row group-buttons">
-        <button data-group="练习一">练习一</button>
-        <button data-group="练习二">练习二</button>
-        <button data-group="练习三">练习三</button>
-      </div>
-    </section>
+      <section id="schoolSection" style="display:none;">
+        <h2>年级</h2>
+        <div class="btn-row year-buttons">
+          <button data-year="一年级" type="button">一年级</button>
+          <button data-year="二年级" type="button">二年级</button>
+          <button data-year="三年级" type="button">三年级</button>
+          <button data-year="四年级" type="button">四年级</button>
+          <button data-year="五年级" type="button">五年级</button>
+          <button data-year="六年级" type="button">六年级</button>
+        </div>
 
-    <button id="startBtn" class="start-btn">开始作答</button>
+        <h2>科目</h2>
+        <div class="btn-row subject-buttons">
+          <button data-subject="BM" type="button">BM</button>
+          <button data-subject="BI" type="button">BI</button>
+          <button data-subject="BC" type="button">BC</button>
+          <button data-subject="MATH" type="button">MATH</button>
+          <button data-subject="SN" type="button">SN</button>
+        </div>
+      </section>
 
-  </main>
+      <section id="compositionSection" style="display:none;">
+        <h2>请选择练习</h2>
+        <div class="btn-row group-buttons">
+          <button data-group="练习一" type="button">练习一</button>
+          <button data-group="练习二" type="button">练习二</button>
+          <button data-group="练习三" type="button">练习三</button>
+        </div>
+      </section>
 
-  <script src="index.js"></script>
+      <button id="startBtn" class="start-btn" type="button">开始作答</button>
+    </main>
+
+    <footer class="credit">
+      © 2026 Azam Maju Tuition Center · All Rights Reserved<br>
+      仅供学习使用 · For Learning Use Only
+    </footer>
+  </div>
+
+  <script src="./index.js"></script>
 </body>
 </html>
