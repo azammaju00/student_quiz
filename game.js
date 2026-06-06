@@ -229,9 +229,9 @@ sentenceBox.style.display = "none";
 
 if (questionType === "word") {
   wordBox.style.display = "block";
-  
+
   document.getElementById("wordInputs").innerHTML =
-  "<h2>WORD MODE TEST</h2>";
+    "<h2>WORD MODE TEST</h2>";
 } else if (questionType === "sentence") {
   sentenceBox.style.display = "block";
 } else {
