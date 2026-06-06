@@ -229,10 +229,26 @@ document.addEventListener("DOMContentLoaded", () => {
 
     document.getElementById("question").innerText = q.question;
 
-    document.getElementById("A").innerText = q.optionA ?? "";
-    document.getElementById("B").innerText = q.optionB ?? "";
-    document.getElementById("C").innerText = q.optionC ?? "";
-    document.getElementById("D").innerText = q.optionD ?? "";
+   const optionMap = {
+  A: q.optionA,
+  B: q.optionB,
+  C: q.optionC,
+  D: q.optionD
+};
+
+["A", "B", "C", "D"].forEach(letter => {
+  const textEl = document.getElementById(letter);
+  const btnEl = document.getElementById("opt" + letter);
+  const value = normalizeText(optionMap[letter]);
+
+  if (value) {
+    textEl.innerText = value;
+    btnEl.style.display = "block";
+  } else {
+    textEl.innerText = "";
+    btnEl.style.display = "none";
+  }
+});
 
     const img = document.getElementById("questionImage");
     if (img) {
