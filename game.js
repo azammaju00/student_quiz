@@ -210,6 +210,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.querySelectorAll(".option").forEach(btn => {
       btn.classList.remove("selected", "correct", "wrong");
       btn.disabled = false;
+      btn.style.display = "block";
     });
   }
 
