@@ -17,64 +17,47 @@
         <input id="volumeSlider" type="range" min="0" max="100" value="35">
       </div>
     </div>
-
+    <img id="questionImage" class="question-img" style="display:none;" alt="题目图片">
     <h3 id="question">题目加载中...</h3>
 
-    <img id="questionImage" class="question-img" style="display:none;" alt="题目图片">
+    
 
-    <!-- MCQ 选择题区域 -->
     <div id="options">
       <button class="option" id="optA" onclick="selectAnswer('A')">
-        <span class="option-label">A.</span>
-        <span id="A"></span>
+        <strong>A.</strong> <span id="A"></span>
       </button>
 
       <button class="option" id="optB" onclick="selectAnswer('B')">
-        <span class="option-label">B.</span>
-        <span id="B"></span>
+        <strong>B.</strong> <span id="B"></span>
       </button>
 
       <button class="option" id="optC" onclick="selectAnswer('C')">
-        <span class="option-label">C.</span>
-        <span id="C"></span>
+        <strong>C.</strong> <span id="C"></span>
       </button>
 
       <button class="option" id="optD" onclick="selectAnswer('D')">
-        <span class="option-label">D.</span>
-        <span id="D"></span>
+        <strong>D.</strong> <span id="D"></span>
       </button>
-    </div>
-
-    <!-- WORD 模式：一个字母一个格子 -->
-    <div id="wordBox" style="display:none;">
-      <div id="wordInputs" class="typing-inputs"></div>
-    </div>
-
-    <!-- SENTENCE 模式：一个词一个格子 -->
-    <div id="sentenceBox" style="display:none;">
-      <div id="sentenceInputs" class="typing-inputs"></div>
     </div>
 
     <button id="nextBtn" onclick="nextQuestion()">下一题</button>
 
-    <div id="result" style="display:none;">
-      <h2 id="scoreText"></h2>
-      <div id="starBox"></div>
+    <div id="resultBox" class="result-box" style="display:none;">
+      <div id="starsContainer" class="stars-container"></div>
 
-      <button onclick="restartQuiz()">再来一次</button>
-      <button onclick="goHome()">返回主页 Homepage</button>
+      <div id="finalText" class="final-text"></div>
+
+      <div class="action-buttons">
+        <button id="retryBtn" type="button">再来一次</button>
+        <button id="homeBtn" type="button">返回主页Homepage</button>
+      </div>
     </div>
   </div>
 
-  <footer>
-    © 2026 Azam Maju Tuition Center · All Rights Reserved<br>
-    仅供学习使用 · For Learning Use Only
-  </footer>
-
-  <audio id="bgMusic" src="./audio/music.mp3" loop></audio>
-  <audio id="clickSound" src="./audio/click.mp3"></audio>
-  <audio id="correctSound" src="./audio/correct.mp3"></audio>
-  <audio id="wrongSound" src="./audio/wrong.mp3"></audio>
+  <footer class="credit">
+  © 2026 Azam Maju Tuition Center · All Rights Reserved<br>
+  仅供学习使用 · For Learning Use Only
+</footer>
 
   <script src="./game.js"></script>
 </body>
