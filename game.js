@@ -230,8 +230,21 @@ sentenceBox.style.display = "none";
 if (questionType === "word") {
   wordBox.style.display = "block";
 
-  document.getElementById("wordInputs").innerHTML =
-    "<h2>WORD MODE TEST</h2>";
+  const answer = q.answer || "";
+
+let html = "";
+
+for (let i = 0; i < answer.length; i++) {
+  html += `
+    <input
+      class="letter-box"
+      maxlength="1"
+      type="text"
+    >
+  `;
+}
+
+document.getElementById("wordInputs").innerHTML = html;
 } else if (questionType === "sentence") {
   sentenceBox.style.display = "block";
 } else {
