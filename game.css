@@ -343,16 +343,34 @@ body {
 }
 
 .letter-box {
-  width: 50px;
-  height: 50px;
+  width: 48px;
+  height: 54px;
   text-align: center;
-  font-size: 24px;
+  font-size: 26px;
   font-weight: bold;
-  border-radius: 10px;
-  border: 2px solid #ccc;
+  border-radius: 14px;
+  border: 2px solid #d6d9ff;
+  background: #ffffff;
+  outline: none;
+  transition: 0.18s ease;
+  box-shadow: 0 4px 0 #c8caff;
 }
 
-  #volumeSlider {
-    width: 60px;
-  }
+.letter-box:focus {
+  transform: translateY(-6px);
+  border-color: #6b63ff;
+  background: #f4f3ff;
+  box-shadow: 0 8px 0 #4b42d6;
+  caret-color: #4b42d6;
+}
+
+.letter-box.filled {
+  background: #e8f7ff;
+  border-color: #74c7ff;
+  box-shadow: 0 4px 0 #4aa6e8;
+}
+
+.letter-box.filled:focus {
+  background: #f4f3ff;
+  border-color: #6b63ff;
 }
