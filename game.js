@@ -218,6 +218,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function showQuestion() {
     const q = filteredQuestions[currentIndex];
     const questionType = (q.type || "mcq").toLowerCase();
+    console.log("当前题型：", q.type, "答案：", q.answer);
 
 const optionsBox = document.getElementById("options");
 const wordBox = document.getElementById("wordBox");
