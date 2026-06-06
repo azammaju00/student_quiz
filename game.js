@@ -229,7 +229,6 @@ sentenceBox.style.display = "none";
 
 if (questionType === "word") {
   wordBox.style.display = "block";
-
   const answer = q.answer || "";
 
 let html = "";
