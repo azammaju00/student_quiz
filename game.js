@@ -217,6 +217,23 @@ document.addEventListener("DOMContentLoaded", () => {
   // ===== SHOW =====
   function showQuestion() {
     const q = filteredQuestions[currentIndex];
+    const questionType = (q.type || "mcq").toLowerCase();
+
+const optionsBox = document.getElementById("options");
+const wordBox = document.getElementById("wordBox");
+const sentenceBox = document.getElementById("sentenceBox");
+
+optionsBox.style.display = "none";
+wordBox.style.display = "none";
+sentenceBox.style.display = "none";
+
+if (questionType === "word") {
+  wordBox.style.display = "block";
+} else if (questionType === "sentence") {
+  sentenceBox.style.display = "block";
+} else {
+  optionsBox.style.display = "block";
+}
     if (!q) return;
 
     resetOptionState();
