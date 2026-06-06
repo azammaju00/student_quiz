@@ -244,6 +244,43 @@ for (let i = 0; i < answer.length; i++) {
 }
 
 document.getElementById("wordInputs").innerHTML = html;
+  const letterBoxes = document.querySelectorAll(".letter-box");
+
+letterBoxes.forEach((box, index) => {
+
+  box.addEventListener("input", () => {
+
+    box.value = box.value.slice(0, 1);
+
+    if (box.value.trim() !== "") {
+      box.classList.add("filled");
+
+      if (index < letterBoxes.length - 1) {
+        letterBoxes[index + 1].focus();
+      }
+    } else {
+      box.classList.remove("filled");
+    }
+
+  });
+
+  box.addEventListener("keydown", (e) => {
+
+    if (
+      e.key === "Backspace" &&
+      box.value === "" &&
+      index > 0
+    ) {
+      letterBoxes[index - 1].focus();
+    }
+
+  });
+
+});
+
+if (letterBoxes.length > 0) {
+  letterBoxes[0].focus();
+}
 } else if (questionType === "sentence") {
   sentenceBox.style.display = "block";
 } else {
