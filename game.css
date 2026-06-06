@@ -355,7 +355,9 @@ body {
   transition: 0.18s ease;
   box-shadow: 0 4px 0 #c8caff;
 }
-
+#volumeSlider {
+  width: 60px;
+}
 .letter-box:focus {
   transform: translateY(-6px);
   border-color: #6b63ff;
@@ -373,4 +375,8 @@ body {
 .letter-box.filled:focus {
   background: #f4f3ff;
   border-color: #6b63ff;
+}
+  
+#volumeSlider {
+  width: 60px;
 }
