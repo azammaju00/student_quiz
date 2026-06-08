@@ -388,6 +388,16 @@ if (letterBoxes.length > 0) {
       c?.classList.add("correct");
       play(wrongSound);
     }
+    letterBoxes.forEach(box => {
+  box.disabled = true;
+  box.classList.remove("filled");
+
+  if (isCorrect) {
+    box.classList.add("correct");
+  } else {
+    box.classList.add("wrong");
+  }
+});
   }
 
   // ===== TIME =====
