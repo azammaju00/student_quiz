@@ -8,9 +8,11 @@ body {
 
 /* ===== 页面容器 ===== */
 .game-container {
-  max-width: 100%;
+  width: 100%;
+  max-width: 620px;
   margin: auto;
   padding: 20px 16px 40px;
+  box-sizing: border-box;
 }
 
 /* ===== 顶部 ===== */
