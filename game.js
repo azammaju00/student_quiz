@@ -440,11 +440,14 @@ if (letterBoxes.length > 0) {
     const time = formatTime(Date.now() - startTime);
 
     document.getElementById("question").style.display = "none";
-    document.getElementById("options").style.display = "none";
-    document.getElementById("nextBtn").style.display = "none";
+document.getElementById("options").style.display = "none";
+document.getElementById("nextBtn").style.display = "none";
 
-    const img = document.getElementById("questionImage");
-    if (img) img.style.display = "none";
+document.getElementById("wordBox").style.display = "none";
+document.getElementById("sentenceBox").style.display = "none";
+
+const img = document.getElementById("questionImage");
+if (img) img.style.display = "none";
 
     document.getElementById("resultBox").style.display = "block";
     showStars(correctCount, total);
@@ -481,9 +484,9 @@ window.nextQuestion = function() {
     if (isCorrect) correctCount++;
 
     answerHistory.push({
-      no: currentIndex + 1,
-      answerText: user
-    });
+  no: currentIndex + 1,
+  answerText: `${user} (${isCorrect ? "正确" : "错误，正确答案：" + correct})`
+});
 
     showResult(isCorrect, selectedAnswer, correctLetter);
     isLocked = true;
