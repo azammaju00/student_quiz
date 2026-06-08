@@ -452,10 +452,27 @@ if (letterBoxes.length > 0) {
     startBgm();
     play(nextSound);
 
-    if (!selectedAnswer) {
-      alert("请选择答案");
-      return;
-    }
+    const q = filteredQuestions[currentIndex];
+const questionType = (q.type || "mcq").toLowerCase();
+
+if (questionType === "mcq") {
+  if (!selectedAnswer) {
+    alert("请选择答案");
+    return;
+  }
+}
+
+if (questionType === "word") {
+  const letterBoxes = document.querySelectorAll(".letter-box");
+  const userAnswer = Array.from(letterBoxes).map(box => box.value).join("");
+
+  if (!userAnswer.trim()) {
+    alert("请输入答案");
+    return;
+  }
+
+  selectedAnswer = userAnswer;
+}
 
     const q = filteredQuestions[currentIndex];
     const user = normalizeText(getOptionText(q, selectedAnswer));
