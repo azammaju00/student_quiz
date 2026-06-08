@@ -392,26 +392,6 @@ if (letterBoxes.length > 0) {
       c?.classList.add("correct");
       play(wrongSound);
     }
-    letterBoxes.forEach(box => {
-  box.disabled = true;
-  box.classList.remove("filled");
-
-  if (isCorrect) {
-    box.classList.add("correct");
-  } else {
-    box.classList.add("wrong");
-  }
-});
-
-const feedback = document.getElementById("wordFeedback");
-
-if (feedback) {
-  if (isCorrect) {
-    feedback.innerText = "✅ Correct!";
-  } else {
-    feedback.innerText = `❌ Correct answer: ${correct}`;
-  }
-}
   }
 
   // ===== TIME =====
@@ -516,6 +496,27 @@ window.nextQuestion = function() {
     }
 
     const isCorrect = normalizeText(user).toLowerCase() === correct.toLowerCase();
+
+    letterBoxes.forEach(box => {
+  box.disabled = true;
+  box.classList.remove("filled");
+
+  if (isCorrect) {
+    box.classList.add("correct");
+  } else {
+    box.classList.add("wrong");
+  }
+});
+
+const feedback = document.getElementById("wordFeedback");
+
+if (feedback) {
+  if (isCorrect) {
+    feedback.innerText = "✅ Correct!";
+  } else {
+    feedback.innerText = `❌ Correct answer: ${correct}`;
+  }
+}
 
     if (isCorrect) {
       correctCount++;
