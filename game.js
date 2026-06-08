@@ -237,9 +237,10 @@ let html = "";
 for (let i = 0; i < answer.length; i++) {
   html += `
     <input
-      class="letter-box"
-      maxlength="1"
-      type="text"
+       class="letter-box"
+    maxlength="1"
+    type="text"
+    style="width:42px;height:48px;border-radius:12px;"
     >
   `;
 }
