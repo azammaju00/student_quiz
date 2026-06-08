@@ -321,31 +321,7 @@ body {
   opacity: 0.9;
 }
 
-/* ===== 手机优化 ===== */
-@media (max-width: 480px) {
-  .game-container {
-    padding: 16px 16px 34px;
-  }
-
-  #question {
-    font-size: 16px;
-  }
-
-  .top-bar {
-    align-items: flex-start;
-  }
-  #wordInputs {
-  display: flex;
-  justify-content: center;
-  gap: 8px;
-  flex-wrap: wrap;
-  margin: 20px 0;
-}
-  
-#volumeSlider {
-  width: 60px;
-}
-  
+/* ===== WORD 输入格子 ===== */
 #wordInputs {
   display: flex;
   justify-content: center;
@@ -391,7 +367,24 @@ body {
   border-color: #6b63ff;
 }
 
+/* ===== 手机优化 ===== */
 @media (max-width: 480px) {
+  .game-container {
+    padding: 16px 16px 34px;
+  }
+
+  #question {
+    font-size: 16px;
+  }
+
+  .top-bar {
+    align-items: flex-start;
+  }
+
+  #volumeSlider {
+    width: 60px;
+  }
+
   #wordInputs {
     gap: 6px;
     max-width: 340px;
@@ -403,5 +396,4 @@ body {
     font-size: 21px;
     border-radius: 12px;
   }
-}
 }
