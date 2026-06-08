@@ -446,39 +446,26 @@ if (letterBoxes.length > 0) {
   }
 
   // ===== NEXT =====
-  window.nextQuestion = function() {
-    if (isLocked) return;
+window.nextQuestion = function() {
+  if (isLocked) return;
 
-    startBgm();
-    play(nextSound);
+  startBgm();
+  play(nextSound);
 
-    const q = filteredQuestions[currentIndex];
-const questionType = (q.type || "mcq").toLowerCase();
+  const q = filteredQuestions[currentIndex];
+  const questionType = normalizeText(q.type || "mcq").toLowerCase();
 
-if (questionType === "mcq") {
-  if (!selectedAnswer) {
-    alert("请选择答案");
-    return;
-  }
-}
+  let user = "";
+  let correct = normalizeText(q.answer);
 
-if (questionType === "word") {
-  const letterBoxes = document.querySelectorAll(".letter-box");
-  const userAnswer = Array.from(letterBoxes).map(box => box.value).join("");
+  if (questionType === "mcq") {
+    if (!selectedAnswer) {
+      alert("请选择答案");
+      return;
+    }
 
-  if (!userAnswer.trim()) {
-    alert("请输入答案");
-    return;
-  }
-
-  selectedAnswer = userAnswer;
-}
-
-    const q = filteredQuestions[currentIndex];
-    const user = normalizeText(getOptionText(q, selectedAnswer));
-    const correct = normalizeText(q.answer);
+    user = normalizeText(getOptionText(q, selectedAnswer));
     const correctLetter = getCorrectLetter(q);
-
     const isCorrect = user === correct;
 
     if (isCorrect) correctCount++;
@@ -490,18 +477,45 @@ if (questionType === "word") {
 
     showResult(isCorrect, selectedAnswer, correctLetter);
     isLocked = true;
+  }
 
-    setTimeout(() => {
-      currentIndex++;
+  if (questionType === "word") {
+    const letterBoxes = document.querySelectorAll(".letter-box");
+    user = Array.from(letterBoxes).map(box => box.value).join("");
 
-      if (currentIndex >= filteredQuestions.length) {
-        finishQuiz();
-        return;
-      }
+    if (!user.trim()) {
+      alert("请输入答案");
+      return;
+    }
 
-      showQuestion();
-    }, 1200);
-  };
+    const isCorrect = normalizeText(user).toLowerCase() === correct.toLowerCase();
+
+    if (isCorrect) {
+      correctCount++;
+      play(correctSound);
+    } else {
+      play(wrongSound);
+    }
+
+    answerHistory.push({
+      no: currentIndex + 1,
+      answerText: user
+    });
+
+    isLocked = true;
+  }
+
+  setTimeout(() => {
+    currentIndex++;
+
+    if (currentIndex >= filteredQuestions.length) {
+      finishQuiz();
+      return;
+    }
+
+    showQuestion();
+  }, 1200);
+};
 
   // ===== INIT =====
   loadQuestions();
