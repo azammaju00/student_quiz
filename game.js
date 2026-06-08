@@ -230,6 +230,10 @@ sentenceBox.style.display = "none";
 
 if (questionType === "word") {
   wordBox.style.display = "block";
+
+  const feedback = document.getElementById("wordFeedback");
+if (feedback) feedback.innerText = "";
+  
   const answer = q.answer || "";
 
 let html = "";
@@ -398,6 +402,16 @@ if (letterBoxes.length > 0) {
     box.classList.add("wrong");
   }
 });
+
+const feedback = document.getElementById("wordFeedback");
+
+if (feedback) {
+  if (isCorrect) {
+    feedback.innerText = "✅ Correct!";
+  } else {
+    feedback.innerText = `❌ Correct answer: ${correct}`;
+  }
+}
   }
 
   // ===== TIME =====
