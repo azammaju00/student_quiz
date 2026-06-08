@@ -368,7 +368,17 @@ body {
   background: #f4f3ff;
   border-color: #6b63ff;
 }
+.letter-box.correct {
+  background: #dcfce7 !important;
+  border-color: #22c55e !important;
+  box-shadow: 0 4px 0 #15803d !important;
+}
 
+.letter-box.wrong {
+  background: #fee2e2 !important;
+  border-color: #ef4444 !important;
+  box-shadow: 0 4px 0 #b91c1c !important;
+}
 /* ===== 手机优化 ===== */
 @media (max-width: 480px) {
   .game-container {
