@@ -288,6 +288,27 @@ if (questionType === "word") {
 
 } else if (questionType === "sentence") {
   sentenceBox.style.display = "block";
+    document.getElementById("sentencePrompt").innerText =
+    `Hint: ${q.prompt || ""}`;
+
+  const answer = q.answer || "";
+
+  let html = "";
+
+  for (let i = 0; i < answer.length; i++) {
+    html += `
+      <input
+        class="letter-box"
+        maxlength="1"
+        type="text"
+        style="width:42px;height:48px;border-radius:12px;"
+      >
+    `;
+  }
+
+  document.getElementById("sentenceInputs").innerHTML = html;
+
+}
 } else {
   optionsBox.style.display = "block";
 }
