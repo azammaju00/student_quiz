@@ -231,26 +231,62 @@ sentenceBox.style.display = "none";
 if (questionType === "word") {
   wordBox.style.display = "block";
 
-document.getElementById("wordInputs").innerHTML = html;
+  const answer = q.answer || "";
+
+  let html = "";
+
+  for (let i = 0; i < answer.length; i++) {
+    html += `
+      <input
+        class="letter-box"
+        maxlength="1"
+        type="text"
+        style="width:42px;height:48px;border-radius:12px;"
+      >
+    `;
+  }
+
+  document.getElementById("wordInputs").innerHTML = html;
+
   const letterBoxes = document.querySelectorAll(".letter-box");
 
-letterBoxes.forEach((box, index) => {
+  letterBoxes.forEach((box, index) => {
 
-  box.addEventListener("input", () => {
+    box.addEventListener("input", () => {
 
-    box.value = box.value.slice(0, 1);
+      box.value = box.value.slice(0, 1);
 
-    if (box.value.trim() !== "") {
-      box.classList.add("filled");
+      if (box.value.trim() !== "") {
+        box.classList.add("filled");
 
-      if (index < letterBoxes.length - 1) {
-        letterBoxes[index + 1].focus();
+        if (index < letterBoxes.length - 1) {
+          letterBoxes[index + 1].focus();
+        }
+      } else {
+        box.classList.remove("filled");
       }
-    } else {
-      box.classList.remove("filled");
-    }
+
+    });
+
+    box.addEventListener("keydown", (e) => {
+
+      if (
+        e.key === "Backspace" &&
+        box.value === "" &&
+        index > 0
+      ) {
+        letterBoxes[index - 1].focus();
+      }
+
+    });
 
   });
+
+  if (letterBoxes.length > 0) {
+    letterBoxes[0].focus();
+  }
+
+}
 
   box.addEventListener("keydown", (e) => {
 
