@@ -286,25 +286,6 @@ if (questionType === "word") {
     letterBoxes[0].focus();
   }
 
-}
-
-  box.addEventListener("keydown", (e) => {
-
-    if (
-      e.key === "Backspace" &&
-      box.value === "" &&
-      index > 0
-    ) {
-      letterBoxes[index - 1].focus();
-    }
-
-  });
-
-});
-
-if (letterBoxes.length > 0) {
-  letterBoxes[0].focus();
-}
 } else if (questionType === "sentence") {
   sentenceBox.style.display = "block";
 } else {
