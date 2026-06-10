@@ -231,24 +231,6 @@ sentenceBox.style.display = "none";
 if (questionType === "word") {
   wordBox.style.display = "block";
 
-  const feedback = document.getElementById("wordFeedback");
-if (feedback) feedback.innerText = "";
-  
-  const answer = q.answer || "";
-
-let html = "";
-
-for (let i = 0; i < answer.length; i++) {
-  html += `
-    <input
-       class="letter-box"
-    maxlength="1"
-    type="text"
-    style="width:42px;height:48px;border-radius:12px;"
-    >
-  `;
-}
-
 document.getElementById("wordInputs").innerHTML = html;
   const letterBoxes = document.querySelectorAll(".letter-box");
 
@@ -542,7 +524,7 @@ if (feedback) {
     }
 
     showQuestion();
-  }, 1200);
+  }, 2000);
 };
 
   // ===== INIT =====
