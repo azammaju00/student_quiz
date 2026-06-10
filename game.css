@@ -379,6 +379,14 @@ body {
   border-color: #ef4444 !important;
   box-shadow: 0 4px 0 #b91c1c !important;
 }
+
+#sentencePrompt {
+  margin: 16px 0;
+  text-align: center;
+  font-size: 18px;
+  font-weight: 700;
+  color: #4b42d6;
+}
 /* ===== 手机优化 ===== */
 @media (max-width: 480px) {
   .game-container {
