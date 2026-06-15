@@ -586,6 +586,43 @@ if (feedback) {
     isLocked = true;
   }
 
+  if (questionType === "sentence") {
+  const sentenceBoxes = document.querySelectorAll("#sentenceInputs .letter-box");
+  user = Array.from(sentenceBoxes).map(box => box.value).join("");
+
+  if (!user.trim()) {
+    alert("请输入答案");
+    return;
+  }
+
+  const isCorrect = normalizeText(user).toLowerCase() === correct.toLowerCase();
+
+  sentenceBoxes.forEach(box => {
+    box.disabled = true;
+    box.classList.remove("filled");
+
+    if (isCorrect) {
+      box.classList.add("correct");
+    } else {
+      box.classList.add("wrong");
+    }
+  });
+
+  if (isCorrect) {
+    correctCount++;
+    play(correctSound);
+  } else {
+    play(wrongSound);
+  }
+
+  answerHistory.push({
+    no: currentIndex + 1,
+    answerText: `${user} (${isCorrect ? "正确" : "错误，正确答案：" + correct})`
+  });
+
+  isLocked = true;
+}
+
   setTimeout(() => {
     currentIndex++;
 
