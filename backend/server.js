@@ -56,6 +56,7 @@ app.get("/api/questions", async (req, res) => {
       image: r[9] || "",
       group: r[10] || "",
       type: r[11] || "mcq",
+      prompt: r[12] || ""
     }));
 
     res.json(questions);
