@@ -243,7 +243,7 @@ if (questionType === "word") {
         class="letter-box"
         maxlength="1"
         type="text"
-        style="width:42px;height:48px;border-radius:12px;"
+       
       >
     `;
   }
@@ -305,7 +305,6 @@ if (sentencePrompt) {
         class="letter-box"
         maxlength="1"
         type="text"
-        style="width:42px;height:48px;border-radius:12px;"
       >
     `;
   }
