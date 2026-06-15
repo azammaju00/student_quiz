@@ -250,7 +250,7 @@ if (questionType === "word") {
 
   document.getElementById("wordInputs").innerHTML = html;
 
-  const letterBoxes = document.querySelectorAll(".letter-box");
+  const letterBoxes = document.querySelectorAll("#wordInputs .letter-box");
 
   letterBoxes.forEach((box, index) => {
 
