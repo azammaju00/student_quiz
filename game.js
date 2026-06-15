@@ -561,16 +561,6 @@ window.nextQuestion = function() {
   }
 });
 
-const feedback = document.getElementById("wordFeedback");
-
-if (feedback) {
-  if (isCorrect) {
-    feedback.innerText = "✅ Correct!";
-  } else {
-    feedback.innerText = `❌ Correct answer: ${correct}`;
-  }
-}
-
     if (isCorrect) {
       correctCount++;
       play(correctSound);
