@@ -288,8 +288,10 @@ if (questionType === "word") {
 
 } else if (questionType === "sentence") {
   sentenceBox.style.display = "block";
-    document.getElementById("sentencePrompt").innerText =
-    `Hint: ${q.prompt || ""}`;
+    const sentencePrompt = document.getElementById("sentencePrompt");
+if (sentencePrompt) {
+  sentencePrompt.innerText = `Hint: ${q.prompt || ""}`;
+}
 
   const answer = q.answer || "";
 
@@ -306,7 +308,10 @@ if (questionType === "word") {
     `;
   }
 
-  document.getElementById("sentenceInputs").innerHTML = html;
+  const sentenceInputs = document.getElementById("sentenceInputs");
+if (sentenceInputs) {
+  sentenceInputs.innerHTML = html;
+}
 
 }
 } else {
