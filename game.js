@@ -313,7 +313,7 @@ if (sentenceInputs) {
   sentenceInputs.innerHTML = html;
 }
 
-}
+
 } else {
   optionsBox.style.display = "block";
 }
