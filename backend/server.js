@@ -10,7 +10,7 @@ app.use(express.json());
 const SPREADSHEET_ID_QUESTIONS = "1mX0gf_p_P1ol-KTnQx9boSxj5Zwos2NYQj1Y84EbWEc";
 const SPREADSHEET_ID_RECORDS = "1mX0gf_p_P1ol-KTnQx9boSxj5Zwos2NYQj1Y84EbWEc";
 
-const RANGE_QUESTIONS = "题库!A:L";
+const RANGE_QUESTIONS = "题库!A:M";
 const RANGE_RECORDS = "作答记录!A:I";
 
 async function getSheetsClient() {
