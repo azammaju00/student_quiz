@@ -387,8 +387,101 @@ body {
   font-weight: 700;
   color: #4b42d6;
 }
+
+/* ===== SENTENCE 模式 ===== */
+#sentenceBox {
+  background: rgba(255, 255, 255, 0.75);
+  padding: 18px 14px;
+  border-radius: 20px;
+  margin-top: 14px;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.08);
+}
+
+#sentencePrompt {
+  display: inline-block;
+  margin: 0 auto 16px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: #eef2ff;
+  color: #4338ca;
+  font-size: 15px;
+  font-weight: 800;
+}
+
+#sentenceInputs {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 8px auto 0;
+  max-width: 520px;
+}
+
+#sentenceInputs .letter-box {
+  width: 46px;
+  height: 54px;
+  box-sizing: border-box;
+  text-align: center;
+  font-size: 24px;
+  font-weight: bold;
+  border-radius: 14px;
+  border: 2px solid #d6d9ff;
+  background: #ffffff;
+  outline: none;
+  transition: 0.18s ease;
+  box-shadow: 0 4px 0 #c8caff;
+  padding: 0;
+}
+
+#sentenceInputs .letter-box:focus {
+  transform: translateY(-6px);
+  border-color: #6b63ff;
+  background: #f4f3ff;
+  box-shadow: 0 8px 0 #4b42d6;
+  caret-color: #4b42d6;
+}
+
+#sentenceInputs .letter-box.filled {
+  background: #e8f7ff;
+  border-color: #74c7ff;
+  box-shadow: 0 4px 0 #4aa6e8;
+}
+
+#sentenceInputs .letter-box.correct {
+  background: #dcfce7 !important;
+  border-color: #22c55e !important;
+  box-shadow: 0 4px 0 #15803d !important;
+}
+
+#sentenceInputs .letter-box.wrong {
+  background: #fee2e2 !important;
+  border-color: #ef4444 !important;
+  box-shadow: 0 4px 0 #b91c1c !important;
+}
+
 /* ===== 手机优化 ===== */
 @media (max-width: 480px) {
+  #sentenceBox {
+  padding: 16px 10px;
+}
+
+#sentencePrompt {
+  font-size: 14px;
+  margin-bottom: 14px;
+}
+
+#sentenceInputs {
+  gap: 6px;
+  max-width: 340px;
+}
+
+#sentenceInputs .letter-box {
+  width: 38px;
+  height: 46px;
+  font-size: 21px;
+  border-radius: 12px;
+}
   .game-container {
     padding: 16px 16px 34px;
   }
