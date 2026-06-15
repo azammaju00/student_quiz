@@ -381,16 +381,20 @@ body {
 }
 
 #sentencePrompt {
-  margin: 16px 0;
+  display: block;
   text-align: center;
-  font-size: 18px;
-  font-weight: 700;
-  color: #4b42d6;
+  margin-bottom: 28px;
+  color: #3730a3;
+  font-size: 28px;
+  font-weight: 900;
+  letter-spacing: 2px;
+  text-transform: uppercase;
 }
 
 /* ===== SENTENCE 模式 ===== */
 #sentenceBox {
   background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(8px);
   padding: 18px 14px;
   border-radius: 20px;
   margin-top: 14px;
@@ -426,11 +430,11 @@ body {
   font-size: 24px;
   font-weight: bold;
   border-radius: 14px;
-  border: 2px solid #d6d9ff;
+  border: 2px solid #818cf8;
   background: #ffffff;
   outline: none;
   transition: 0.18s ease;
-  box-shadow: 0 4px 0 #c8caff;
+  box-shadow: 0 6px 0 #4f46e5;
   padding: 0;
 }
 
