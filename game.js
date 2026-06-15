@@ -540,7 +540,7 @@ window.nextQuestion = function() {
   }
 
   if (questionType === "word") {
-    const letterBoxes = document.querySelectorAll(".letter-box");
+    const letterBoxes = document.querySelectorAll("#wordInputs .letter-box")
     user = Array.from(letterBoxes).map(box => box.value).join("");
 
     if (!user.trim()) {
