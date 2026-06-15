@@ -218,6 +218,8 @@ document.addEventListener("DOMContentLoaded", () => {
   function showQuestion() {
     const q = filteredQuestions[currentIndex];
     const questionType = (q.type || "mcq").toLowerCase();
+    const wordFeedback = document.getElementById("wordFeedback");
+if (wordFeedback) wordFeedback.innerText = "";
     console.log("当前题型：", q.type, "答案：", q.answer);
 
 const optionsBox = document.getElementById("options");
@@ -312,7 +314,33 @@ if (sentencePrompt) {
 if (sentenceInputs) {
   sentenceInputs.innerHTML = html;
 }
+const sentenceBoxes = document.querySelectorAll("#sentenceInputs .letter-box");
 
+sentenceBoxes.forEach((box, index) => {
+  box.addEventListener("input", () => {
+    box.value = box.value.slice(0, 1);
+
+    if (box.value.trim() !== "") {
+      box.classList.add("filled");
+
+      if (index < sentenceBoxes.length - 1) {
+        sentenceBoxes[index + 1].focus();
+      }
+    } else {
+      box.classList.remove("filled");
+    }
+  });
+
+  box.addEventListener("keydown", (e) => {
+    if (e.key === "Backspace" && box.value === "" && index > 0) {
+      sentenceBoxes[index - 1].focus();
+    }
+  });
+});
+
+if (sentenceBoxes.length > 0) {
+  sentenceBoxes[0].focus();
+}
 
 } else {
   optionsBox.style.display = "block";
