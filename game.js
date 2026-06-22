@@ -552,14 +552,11 @@ window.nextQuestion = function() {
 
       box.value = correct[index] || "";
 
-      box.classList.remove("wrong");
-      box.classList.add("correct");
-
     }, 350);
 
   }
 
-}, index * 250);
+}, index * 500);
     });
 
     if (isCorrect) {
