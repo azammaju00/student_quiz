@@ -463,13 +463,63 @@ body {
   border-color: #ef4444 !important;
   box-shadow: 0 4px 0 #b91c1c !important;
 }
+/* ===== SENTENCE WORD LINE ===== */
 
+#sentenceInputs {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+
+.word-line {
+  border: none;
+  border-bottom: 4px solid #4f46e5;
+
+  background: transparent;
+
+  text-align: center;
+
+  font-size: 24px;
+  font-weight: 800;
+
+  color: #111827;
+
+  outline: none;
+
+  padding: 6px 4px;
+
+  transition: all 0.2s ease;
+}
+
+.word-line:focus {
+  border-bottom-color: #312e81;
+
+  transform: translateY(-4px);
+
+  box-shadow:
+    0 8px 12px rgba(99,102,241,0.18);
+}
+
+.word-line.correct {
+  border-bottom-color: #16a34a !important;
+  color: #166534 !important;
+}
+
+.word-line.wrong {
+  border-bottom-color: #dc2626 !important;
+  color: #991b1b !important;
+}
 /* ===== 手机优化 ===== */
 @media (max-width: 480px) {
   #sentenceBox {
   padding: 16px 10px;
 }
-
+.word-line {
+  font-size: 20px;
+}
 #sentencePrompt {
   font-size: 14px;
   margin-bottom: 14px;
