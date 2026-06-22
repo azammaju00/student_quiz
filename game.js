@@ -560,6 +560,7 @@ window.nextQuestion = function() {
   }
 
 }, index * 250);
+    });
 
     if (isCorrect) {
       correctCount++;
