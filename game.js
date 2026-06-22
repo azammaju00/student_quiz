@@ -539,12 +539,23 @@ window.nextQuestion = function() {
   box.classList.remove("filled");
 
   setTimeout(() => {
+
     if (userChar === correctChar) {
+
       box.classList.add("correct");
+
     } else {
+
       box.classList.add("wrong");
+
+      setTimeout(() => {
+        box.value = correct[index] || "";
+      }, index * 120 + 500);
+
     }
+
   }, index * 180);
+
 });
 
     if (isCorrect) {
