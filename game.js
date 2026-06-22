@@ -214,178 +214,163 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // ===== SHOW =====
-  function showQuestion() {
-    const q = filteredQuestions[currentIndex];
-    const questionType = (q.type || "mcq").toLowerCase();
-    const wordFeedback = document.getElementById("wordFeedback");
-if (wordFeedback) wordFeedback.innerText = "";
-    console.log("当前题型：", q.type, "答案：", q.answer);
+// ===== SHOW =====
+function showQuestion() {
+  const q = filteredQuestions[currentIndex];
+  if (!q) return;
 
-const optionsBox = document.getElementById("options");
-const wordBox = document.getElementById("wordBox");
-const sentenceBox = document.getElementById("sentenceBox");
+  resetOptionState();
 
-optionsBox.style.display = "none";
-wordBox.style.display = "none";
-sentenceBox.style.display = "none";
+  const questionType = normalizeText(q.type || "mcq").toLowerCase();
 
-if (questionType === "word") {
-  wordBox.style.display = "block";
+  const optionsBox = document.getElementById("options");
+  const wordBox = document.getElementById("wordBox");
+  const sentenceBox = document.getElementById("sentenceBox");
 
-  const answer = q.answer || "";
-  const words = answer.split(" ");
+  optionsBox.style.display = "none";
+  wordBox.style.display = "none";
+  sentenceBox.style.display = "none";
 
-  let html = "";
-  
-  words.forEach(word => {
-    const width = Math.max(word.length * 18, 70);
-  
-    html += `
-      <input
-        class="word-line"
-        maxlength="${word.length}"
-        type="text"
-        style="width:${width}px"
-      >
-    `;
-  });
+  const progressEl = document.getElementById("progress");
+  progressEl.innerText = `${currentIndex + 1} / ${filteredQuestions.length}`;
 
-  document.getElementById("wordInputs").innerHTML = html;
+  progressEl.classList.remove("progress-bounce");
+  void progressEl.offsetWidth;
+  progressEl.classList.add("progress-bounce");
 
-  const letterBoxes = document.querySelectorAll("#wordInputs .letter-box");
+  document.getElementById("question").innerText = q.question;
 
-  letterBoxes.forEach((box, index) => {
+  const img = document.getElementById("questionImage");
+  if (img) {
+    if (q.image) {
+      img.src = q.image;
+      img.style.display = "block";
+    } else {
+      img.src = "";
+      img.style.display = "none";
+    }
+  }
 
-    box.addEventListener("input", () => {
+  if (questionType === "word") {
+    wordBox.style.display = "block";
 
-      box.value = box.value.slice(0, 1);
+    const answer = q.answer || "";
+    let html = "";
 
-      if (box.value.trim() !== "") {
-        box.classList.add("filled");
+    for (let i = 0; i < answer.length; i++) {
+      html += `
+        <input
+          class="letter-box"
+          maxlength="1"
+          type="text"
+        >
+      `;
+    }
 
-        if (index < letterBoxes.length - 1) {
-          letterBoxes[index + 1].focus();
+    document.getElementById("wordInputs").innerHTML = html;
+
+    const letterBoxes = document.querySelectorAll("#wordInputs .letter-box");
+
+    letterBoxes.forEach((box, index) => {
+      box.addEventListener("input", () => {
+        box.value = box.value.slice(0, 1);
+
+        if (box.value.trim() !== "") {
+          box.classList.add("filled");
+
+          if (index < letterBoxes.length - 1) {
+            letterBoxes[index + 1].focus();
+          }
+        } else {
+          box.classList.remove("filled");
         }
-      } else {
-        box.classList.remove("filled");
-      }
+      });
 
+      box.addEventListener("keydown", (e) => {
+        if (e.key === "Backspace" && box.value === "" && index > 0) {
+          letterBoxes[index - 1].focus();
+        }
+      });
     });
 
-    box.addEventListener("keydown", (e) => {
+    if (letterBoxes.length > 0) {
+      letterBoxes[0].focus();
+    }
 
-      if (
-        e.key === "Backspace" &&
-        box.value === "" &&
-        index > 0
-      ) {
-        letterBoxes[index - 1].focus();
-      }
+  } else if (questionType === "sentence") {
+    sentenceBox.style.display = "block";
 
-    });
-
-  });
-
-  if (letterBoxes.length > 0) {
-    letterBoxes[0].focus();
-  }
-
-} else if (questionType === "sentence") {
-  sentenceBox.style.display = "block";
     const sentencePrompt = document.getElementById("sentencePrompt");
-if (sentencePrompt) {
-  sentencePrompt.innerText = `Hint: ${q.prompt || ""}`;
-}
-
-  const answer = q.answer || "";
-
-  let html = "";
-
-  for (let i = 0; i < answer.length; i++) {
-    html += `
-      <input
-        class="letter-box"
-        maxlength="1"
-        type="text"
-      >
-    `;
-  }
-
-  const sentenceInputs = document.getElementById("sentenceInputs");
-if (sentenceInputs) {
-  sentenceInputs.innerHTML = html;
-}
-const sentenceBoxes = document.querySelectorAll("#sentenceInputs .word-line");
-
-sentenceBoxes.forEach((box, index) => {
-  box.addEventListener("input", () => {
-    const max = Number(box.getAttribute("maxlength"));
-
-    if (box.value.length >= max && index < sentenceBoxes.length - 1) {
-      sentenceBoxes[index + 1].focus();
+    if (sentencePrompt) {
+      sentencePrompt.innerText = q.prompt || "";
     }
-  });
 
-  box.addEventListener("keydown", (e) => {
-    if (e.key === "Backspace" && box.value === "" && index > 0) {
-      sentenceBoxes[index - 1].focus();
+    const answer = q.answer || "";
+    const words = answer.split(" ");
+    let html = "";
+
+    words.forEach(word => {
+      const width = Math.max(word.length * 18, 70);
+
+      html += `
+        <input
+          class="word-line"
+          maxlength="${word.length}"
+          type="text"
+          style="width:${width}px"
+        >
+      `;
+    });
+
+    document.getElementById("sentenceInputs").innerHTML = html;
+
+    const sentenceBoxes = document.querySelectorAll("#sentenceInputs .word-line");
+
+    sentenceBoxes.forEach((box, index) => {
+      box.addEventListener("input", () => {
+        const max = Number(box.getAttribute("maxlength"));
+
+        if (box.value.length >= max && index < sentenceBoxes.length - 1) {
+          sentenceBoxes[index + 1].focus();
+        }
+      });
+
+      box.addEventListener("keydown", (e) => {
+        if (e.key === "Backspace" && box.value === "" && index > 0) {
+          sentenceBoxes[index - 1].focus();
+        }
+      });
+    });
+
+    if (sentenceBoxes.length > 0) {
+      sentenceBoxes[0].focus();
     }
-  });
-});
 
-if (sentenceBoxes.length > 0) {
-  sentenceBoxes[0].focus();
-
-
-} else {
-  optionsBox.style.display = "block";
-}
-    if (!q) return;
-
-    resetOptionState();
-
-    const progressEl = document.getElementById("progress");
-    progressEl.innerText = `${currentIndex + 1} / ${filteredQuestions.length}`;
-
-    progressEl.classList.remove("progress-bounce");
-    void progressEl.offsetWidth;
-    progressEl.classList.add("progress-bounce");
-
-    document.getElementById("question").innerText = q.question;
-
-   const optionMap = {
-  A: q.optionA,
-  B: q.optionB,
-  C: q.optionC,
-  D: q.optionD
-};
-
-["A", "B", "C", "D"].forEach(letter => {
-  const textEl = document.getElementById(letter);
-  const btnEl = document.getElementById("opt" + letter);
-  const value = normalizeText(optionMap[letter]);
-
-  if (value) {
-    textEl.innerText = value;
-    btnEl.style.display = "block";
   } else {
-    textEl.innerText = "";
-    btnEl.style.display = "none";
-  }
-});
+    optionsBox.style.display = "block";
 
-    const img = document.getElementById("questionImage");
-    if (img) {
-      if (q.image) {
-        img.src = q.image;
-        img.style.display = "block";
+    const optionMap = {
+      A: q.optionA,
+      B: q.optionB,
+      C: q.optionC,
+      D: q.optionD
+    };
+
+    ["A", "B", "C", "D"].forEach(letter => {
+      const textEl = document.getElementById(letter);
+      const btnEl = document.getElementById("opt" + letter);
+      const value = normalizeText(optionMap[letter]);
+
+      if (value) {
+        textEl.innerText = value;
+        btnEl.style.display = "block";
       } else {
-        img.src = "";
-        img.style.display = "none";
+        textEl.innerText = "";
+        btnEl.style.display = "none";
       }
-    }
+    });
   }
+}
 
   // ===== SELECT =====
   window.selectAnswer = function(letter) {
