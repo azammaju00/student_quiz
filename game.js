@@ -531,15 +531,20 @@ window.nextQuestion = function() {
 
     const isCorrect = normalizeText(user).toLowerCase() === correct.toLowerCase();
 
-    letterBoxes.forEach(box => {
+    letterBoxes.forEach((box, index) => {
+  const userChar = normalizeText(box.value).toLowerCase();
+  const correctChar = normalizeText(correct[index] || "").toLowerCase();
+
   box.disabled = true;
   box.classList.remove("filled");
 
-  if (isCorrect) {
-    box.classList.add("correct");
-  } else {
-    box.classList.add("wrong");
-  }
+  setTimeout(() => {
+    if (userChar === correctChar) {
+      box.classList.add("correct");
+    } else {
+      box.classList.add("wrong");
+    }
+  }, index * 180);
 });
 
     if (isCorrect) {
