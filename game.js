@@ -234,19 +234,22 @@ if (questionType === "word") {
   wordBox.style.display = "block";
 
   const answer = q.answer || "";
+  const words = answer.split(" ");
 
   let html = "";
-
-  for (let i = 0; i < answer.length; i++) {
+  
+  words.forEach(word => {
+    const width = Math.max(word.length * 18, 70);
+  
     html += `
       <input
-        class="letter-box"
-        maxlength="1"
+        class="word-line"
+        maxlength="${word.length}"
         type="text"
-       
+        style="width:${width}px"
       >
     `;
-  }
+  });
 
   document.getElementById("wordInputs").innerHTML = html;
 
@@ -313,20 +316,14 @@ if (sentencePrompt) {
 if (sentenceInputs) {
   sentenceInputs.innerHTML = html;
 }
-const sentenceBoxes = document.querySelectorAll("#sentenceInputs .letter-box");
+const sentenceBoxes = document.querySelectorAll("#sentenceInputs .word-line");
 
 sentenceBoxes.forEach((box, index) => {
   box.addEventListener("input", () => {
-    box.value = box.value.slice(0, 1);
+    const max = Number(box.getAttribute("maxlength"));
 
-    if (box.value.trim() !== "") {
-      box.classList.add("filled");
-
-      if (index < sentenceBoxes.length - 1) {
-        sentenceBoxes[index + 1].focus();
-      }
-    } else {
-      box.classList.remove("filled");
+    if (box.value.length >= max && index < sentenceBoxes.length - 1) {
+      sentenceBoxes[index + 1].focus();
     }
   });
 
@@ -339,7 +336,7 @@ sentenceBoxes.forEach((box, index) => {
 
 if (sentenceBoxes.length > 0) {
   sentenceBoxes[0].focus();
-}
+
 
 } else {
   optionsBox.style.display = "block";
@@ -576,8 +573,8 @@ window.nextQuestion = function() {
   }
 
   if (questionType === "sentence") {
-  const sentenceBoxes = document.querySelectorAll("#sentenceInputs .letter-box");
-  user = Array.from(sentenceBoxes).map(box => box.value).join("");
+ const sentenceBoxes = document.querySelectorAll("#sentenceInputs .word-line");
+user = Array.from(sentenceBoxes).map(box => box.value).join(" ");
 
   if (!user.trim()) {
     alert("请输入答案");
