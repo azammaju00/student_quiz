@@ -540,23 +540,26 @@ window.nextQuestion = function() {
 
   setTimeout(() => {
 
-    if (userChar === correctChar) {
+  if (userChar === correctChar) {
 
+    box.classList.add("correct");
+
+  } else {
+
+    box.classList.add("wrong");
+
+    setTimeout(() => {
+
+      box.value = correct[index] || "";
+
+      box.classList.remove("wrong");
       box.classList.add("correct");
 
-    } else {
+    }, 350);
 
-      box.classList.add("wrong");
+  }
 
-      setTimeout(() => {
-        box.value = correct[index] || "";
-      }, index * 120 + 500);
-
-    }
-
-  }, index * 180);
-
-});
+}, index * 250);
 
     if (isCorrect) {
       correctCount++;
@@ -584,16 +587,33 @@ user = Array.from(sentenceBoxes).map(box => box.value).join(" ");
 
   const isCorrect = normalizeText(user).toLowerCase() === correct.toLowerCase();
 
-  sentenceBoxes.forEach(box => {
-    box.disabled = true;
-    box.classList.remove("filled");
+  const correctWords = correct.split(" ");
 
-    if (isCorrect) {
-      box.classList.add("correct");
-    } else {
-      box.classList.add("wrong");
-    }
-  });
+sentenceBoxes.forEach((box, index) => {
+
+  box.disabled = true;
+
+  const userWord =
+    normalizeText(box.value).toLowerCase();
+
+  const correctWord =
+    normalizeText(correctWords[index] || "")
+      .toLowerCase();
+
+  if (userWord === correctWord) {
+
+    box.classList.add("correct");
+
+  } else {
+
+    box.classList.add("wrong");
+
+    setTimeout(() => {
+      box.value = correctWords[index] || "";
+    }, 600);
+
+  }
+});
 
   if (isCorrect) {
     correctCount++;
