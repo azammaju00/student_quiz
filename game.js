@@ -1,6 +1,6 @@
 // ===== CONFIG =====
 const QUESTIONS_URL = "https://student-quiz-4wu4.onrender.com/api/questions";
-const SAVE_API = "https://student-quiz-4wu4.onrender.com/api/submit"
+const SAVE_API = "https://student-quiz-4wu4.onrender.com/api/submit";
 
 // ===== DOM READY =====
 document.addEventListener("DOMContentLoaded", () => {
