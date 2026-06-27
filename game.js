@@ -654,7 +654,7 @@ setTimeout(() => {
 
   showQuestion();
 }, waitTime);
-};
+)};
 
   // ===== INIT =====
   loadQuestions();
