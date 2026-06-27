@@ -644,7 +644,15 @@ sentenceBoxes.forEach((box, index) => {
       ? Math.max(correct.split(" ").length * 800 + 5000, 5000)
       : 2000;
 
+const waitTime =
+  questionType === "word"
+    ? Math.max(correct.length * 500 + 5000, 5000)
+    : questionType === "sentence"
+      ? Math.max(correct.split(" ").length * 800 + 5000, 5000)
+      : 2000;
+
 setTimeout(() => {
+
   currentIndex++;
 
   if (currentIndex >= filteredQuestions.length) {
@@ -653,8 +661,10 @@ setTimeout(() => {
   }
 
   showQuestion();
+
 }, waitTime);
-)};
+
+};
 
   // ===== INIT =====
   loadQuestions();
