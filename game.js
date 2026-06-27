@@ -628,15 +628,7 @@ sentenceBoxes.forEach((box, index) => {
   isLocked = true;
 }
 
-  setTimeout(() => {
-    currentIndex++;
-
-    if (currentIndex >= filteredQuestions.length) {
-      finishQuiz();
-      return;
-    }
-
-    showQuestion();
+ 
   const waitTime =
   questionType === "word"
     ? Math.max(correct.length * 500 + 5000, 5000)
