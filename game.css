@@ -121,7 +121,7 @@ body {
 #options {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 18px;
 }
 
 /* ===== 选项按钮 ===== */
