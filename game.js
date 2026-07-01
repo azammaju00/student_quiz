@@ -347,7 +347,7 @@ function showQuestion() {
     }
 
   } else {
-    optionsBox.style.display = "block";
+    optionsBox.style.display = "flex";
 
     const optionMap = {
       A: q.optionA,
