@@ -232,10 +232,7 @@ function showQuestion() {
   sentenceBox.style.display = "none";
 
   const progressEl = document.getElementById("progress");
-  progressEl.innerHTML = `
-<div class="progress-top">${currentIndex + 1}</div>
-<div class="progress-bottom">/ ${filteredQuestions.length}</div>
-`;
+  progressEl.innerText = `${currentIndex + 1} / ${filteredQuestions.length}`;
 
   progressEl.classList.remove("progress-bounce");
   void progressEl.offsetWidth;
